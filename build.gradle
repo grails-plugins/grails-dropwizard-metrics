@@ -14,6 +14,7 @@ buildscript {
 plugins {
     id "io.spring.dependency-management" version "0.5.4.RELEASE"
     id "com.jfrog.bintray" version "1.2"
+    id 'org.asciidoctor.convert' version '1.5.3'
 }
 
 version "1.0.0.BUILD-SNAPSHOT"
@@ -63,8 +64,24 @@ dependencies {
     testCompile "org.grails:grails-plugin-testing"
 
     console "org.grails:grails-console"
+
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-healthchecks', version: '3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-servlets', version: '3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-annotation', version: '3.1.2'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-jetty9', version: '3.1.2'
+
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
+}
+
+asciidoctor {
+    attributes 'experimental'  : 'true',
+            'compat-mode'   : 'true',
+            'toc'           : 'left',
+            'icons'         : 'font',
+            'version'       : project.version
 }

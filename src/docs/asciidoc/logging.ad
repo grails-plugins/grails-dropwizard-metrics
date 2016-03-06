@@ -1,0 +1,20 @@
+The plugin provides support for automatically logging metrics at a scheduled interval.
+To enable logging assign a value to the `grails.yammer.metrics.reporterFrequency` config
+property to indicate how often the logging should occur.  The value represents the logging
+interval in seconds.
+
+```
+grails:
+    yammer:
+        metrics:
+            reporterFrequency: 30 # log every 30 seconds
+```
+
+The logging is being done from a logger named `yammer.metrics.YammerMetricsGrailsPlugin` at
+the `INFO` level.  You may want to configure the level for that logger in `grails-app/conf/logback.groovy`
+as shown below.
+
+```
+logger 'yammer.metrics.YammerMetricsGrailsPlugin',
+        INFO, ['STDOUT'], false
+```

@@ -1,0 +1,40 @@
+=== HealthCheck Beans
+
+The plugin will discover all of the
+https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/health/HealthCheck.html[HealthCheck]
+instances that are found in the Spring application context and active them.  An application may provide
+any number of `HealthCheck` beans.
+
+=== Default HealthCheck Beans
+
+The plugin automatically adds the following `HealthCheck` beans to the Spring application context.
+
+[cols="2*", options="header"]
+|===
+|Bean Name
+|Type
+
+|yammerThreadDeadlockHealthCheck
+|https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/health/jvm/ThreadDeadlockHealthCheck.html[com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck]
+|===
+
+=== Exposing Health Check Data
+
+The plugin supports exposing access to health check data through a URI in the web application.  To enable
+exposing the data assign a value to the `grails.yammer.health.uri` property to indicate where the
+data should be made available.
+
+```
+---
+grails:
+    yammer:
+        health:
+            uri: /checkHealth
+```
+
+With that configuration in place a request to `/checkHealth` will be responded to with JSON provided by all
+ of the `HealthCheck` instances that are active in the application as shown below.
+
+```
+{"yammerThreadDeadlockHealthCheck":{"healthy":true}}
+```

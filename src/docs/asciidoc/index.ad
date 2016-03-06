@@ -1,0 +1,25 @@
+= Grails Yammer Metrics
+:author: Jeff Scott Brown
+:email: brownj@ociweb.com
+:source-highlighter: coderay
+:numbered:
+
+== Introduction
+
+include::introduction.ad[]
+
+== Installation
+
+include::installation.ad[]
+
+== Metrics
+
+include::metrics.ad[]
+
+== Health Checks
+
+include::healthchecks.ad[]
+
+== Logging
+
+include::logging.ad[]
