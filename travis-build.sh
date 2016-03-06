@@ -32,7 +32,7 @@ fi
   # If this is the master branch then update the snapshot
   if [[ $TRAVIS_BRANCH == 'master' ]]; then
      mkdir -p snapshot
-     cp -r ../docs/build/docs/. ./snapshot/
+     cp -r ../build/asciidoc/html5/. ./snapshot/
 
      git add snapshot/*
   fi
