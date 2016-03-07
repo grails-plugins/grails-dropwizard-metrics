@@ -489,13 +489,27 @@ to access and increment a <code>Meter</code>.  Any class may implement the trait
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">import grails.plugin.yammer.metrics.meters.Meterable
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">class SomeClass implements Meterable {
 
-class SomeGroovyClass implements Meterable {
+    def someAction() {
+        markMeter 'some meter'
 
-    void someMethod() {
-        markMeter('myMeterName')
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The plugin provides the <code>grails.plugin.yammer.metrics.meters.Metered</code> annotation which may be applied to any method.
+If a method is marked with <code>@Metered</code>, every time the method is invoked, the meter with the specified name will
+automatically be incremeneted.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">class SomeOtherClass {
 
+    @Metered('some meter')
+    void someAction() {
         // ...
     }
 }</code></pre>
@@ -505,28 +519,30 @@ class SomeGroovyClass implements Meterable {
 <h4 id="_unit_testing">Unit Testing</h4>
 <div class="paragraph">
 <p>When unit testing code which invokes the <code>markMeter(String)</code> method a bean named <code>yammerMetricsRegistry</code> will
-need to be registed in the Spring application context.  Below is an example of that.</p>
+need to be registed in the Spring application context.  Below are examples of how to do that.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">package grails.plugin.yammer.metrics.meters
-
-import com.codahale.metrics.MetricRegistry
+<pre class="highlight"><code class="language-groovy" data-lang="groovy"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import com.codahale.metrics.MetricRegistry
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
-import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)
-class MeterableSpec extends Specification {
+class MeteredAnnotationSpec {
 
     static doWithSpring = {
         yammerMetricsRegistry MetricRegistry
     }
 
-    void 'test markMeter method'() {
+    void 'test the @Metered annotation'() {
         setup:
         def registry = applicationContext.yammerMetricsRegistry
-        def obj = new SomeClass()
+        def obj = new SomeOtherClass()
 
         when:
         obj.someAction()
@@ -534,16 +550,15 @@ class MeterableSpec extends Specification {
         obj.someAction()
 
         then:
-        registry.meter('stuff').count == 3
+        registry.meter('some meter').count == 3
     }
 }
 
-class SomeClass implements Meterable {
+class SomeOtherClass {
 
-    def someAction() {
-        markMeter 'stuff'
-
-        // carry on...
+    @Metered('some meter')
+    void someAction() {
+        // ...
     }
 }</code></pre>
 </div>
@@ -579,7 +594,7 @@ grails:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-07 02:58:16 UTC
+Last updated 2016-03-07 03:56:53 UTC
 </div>
 </div>
 </body>
