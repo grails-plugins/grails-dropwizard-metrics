@@ -526,7 +526,8 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_metricregistry_beans">3.1. MetricRegistry Beans</a></li>
 <li><a href="#_default_metricregistry_beans">3.2. Default MetricRegistry Beans</a></li>
-<li><a href="#_exposing_metrics_data">3.3. Exposing Metrics Data</a></li>
+<li><a href="#_marking_meters">3.3. Marking Meters</a></li>
+<li><a href="#_exposing_metrics_data">3.4. Exposing Metrics Data</a></li>
 </ul>
 </li>
 <li><a href="#_health_checks">4. Health Checks</a>
@@ -608,7 +609,37 @@ any number of <code>MetricRegistry</code> beans.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_exposing_metrics_data">3.3. Exposing Metrics Data</h3>
+<h3 id="_marking_meters">3.3. Marking Meters</h3>
+<div class="quoteblock">
+<blockquote>
+A meter measures the rate of events over time (e.g., “requests per second”). In addition to the mean rate, meters also
+track 1-, 5-, and 15-minute moving averages.
+</blockquote>
+<div class="attribution">
+&#8212; The Yammer Metrics Documentation
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>grails.plugin.yammer.metrics.meters.Meterable</code> trait provides a <code>markMeter(String)</code> method which makes it easy
+to access and increment a <code>Meter</code>.  Any class may implement the trait and take advantage of this method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">grails.plugin.yammer.metrics.meters.Meterable</span>
+
+<span class="type">class</span> <span class="class">SomeGroovyClass</span> <span class="directive">implements</span> Meterable {
+
+    <span class="type">void</span> someMethod() {
+        markMeter(<span class="string"><span class="delimiter">'</span><span class="content">myMeterName</span><span class="delimiter">'</span></span>)
+
+        <span class="comment">// ...</span>
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exposing_metrics_data">3.4. Exposing Metrics Data</h3>
 <div class="paragraph">
 <p>The plugin supports exposing access to metrics data through a URI in the web application.  To enable
 exposing the data assign a value to the <code>grails.yammer.metrics.uri</code> property to indicate where the
@@ -732,7 +763,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-06 21:14:29 UTC
+Last updated 2016-03-07 02:22:23 UTC
 </div>
 </div>
 </body>
