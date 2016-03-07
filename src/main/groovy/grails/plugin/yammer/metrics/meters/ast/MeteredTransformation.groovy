@@ -26,6 +26,7 @@ import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
@@ -48,7 +49,7 @@ class MeteredTransformation implements ASTTransformation {
 
         newCode.addStatement(new ExpressionStatement(markExpression))
 
-        BlockStatement originalMethodCode = methodNode.code
+        Statement originalMethodCode = methodNode.code
         newCode.addStatement(originalMethodCode)
 
         methodNode.code = newCode
