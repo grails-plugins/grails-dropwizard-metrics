@@ -637,6 +637,54 @@ to access and increment a <code>Meter</code>.  Any class may implement the trait
 }</code></pre>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_unit_testing">3.3.1. Unit Testing</h4>
+<div class="paragraph">
+<p>When unit testing code which invokes the <code>markMeter(String)</code> method a bean named <code>yammerMetricsRegistry</code> will
+need to be registed in the Spring application context.  Below is an example of that.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">package</span> grails.plugin.yammer.metrics.meters
+
+<span class="keyword">import</span> <span class="include">com.codahale.metrics.MetricRegistry</span>
+<span class="keyword">import</span> <span class="include">grails.test.mixin.TestMixin</span>
+<span class="keyword">import</span> <span class="include">grails.test.mixin.support.GrailsUnitTestMixin</span>
+<span class="keyword">import</span> <span class="include">spock.lang.Specification</span>
+
+<span class="annotation">@TestMixin</span>(GrailsUnitTestMixin)
+<span class="type">class</span> <span class="class">MeterableSpec</span> <span class="directive">extends</span> Specification {
+
+    <span class="directive">static</span> doWithSpring = {
+        yammerMetricsRegistry MetricRegistry
+    }
+
+    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test markMeter method</span><span class="delimiter">'</span></span>() {
+        <span class="key">setup</span>:
+        <span class="keyword">def</span> registry = applicationContext.yammerMetricsRegistry
+        <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeClass()
+
+        <span class="key">when</span>:
+        obj.someAction()
+        obj.someAction()
+        obj.someAction()
+
+        <span class="key">then</span>:
+        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">stuff</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
+    }
+}
+
+<span class="type">class</span> <span class="class">SomeClass</span> <span class="directive">implements</span> Meterable {
+
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
+        markMeter <span class="string"><span class="delimiter">'</span><span class="content">stuff</span><span class="delimiter">'</span></span>
+
+        <span class="comment">// carry on...</span>
+    }
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_exposing_metrics_data">3.4. Exposing Metrics Data</h3>
@@ -763,7 +811,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-07 02:42:42 UTC
+Last updated 2016-03-07 02:58:16 UTC
 </div>
 </div>
 </body>
