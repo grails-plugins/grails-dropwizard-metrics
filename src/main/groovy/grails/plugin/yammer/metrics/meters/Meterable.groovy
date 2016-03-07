@@ -16,8 +16,6 @@ trait Meterable extends ServletAttributes {
 
     private Meter retrieveMeter(String name) {
         retrieveMetricRegistry().meter(name)
-        retrieveMetricRegistry().meter(name)
-        retrieveMetricRegistry().meter(name)
     }
 
     void markMeter(String name) {
