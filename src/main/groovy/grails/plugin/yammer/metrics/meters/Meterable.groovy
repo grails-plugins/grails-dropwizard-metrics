@@ -19,8 +19,6 @@ import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
 import grails.web.api.ServletAttributes
 import groovy.transform.CompileStatic
-import org.springframework.context.ApplicationContext
-import org.springframework.web.context.support.WebApplicationContextUtils
 
 @CompileStatic
 trait Meterable extends ServletAttributes {
