@@ -47,6 +47,15 @@ class SomeGroovyClass implements Meterable {
 }
 ----
 
+==== Unit Testing
+
+When unit testing code which invokes the `markMeter(String)` method a bean named `yammerMetricsRegistry` will
+need to be registed in the Spring application context.  Below is an example of that.
+
+[source,groovy]
+----
+include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeterableSpec.groovy[]
+----
 
 === Exposing Metrics Data
 

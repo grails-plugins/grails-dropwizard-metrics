@@ -1,38 +1,37 @@
 package grails.plugin.yammer.metrics.meters
 
 import com.codahale.metrics.MetricRegistry
-import grails.test.mixin.TestFor
-import grails.web.Controller
+import grails.test.mixin.TestMixin
+import grails.test.mixin.support.GrailsUnitTestMixin
 import spock.lang.Specification
 
-@TestFor(SomeController)
+@TestMixin(GrailsUnitTestMixin)
 class MeterableSpec extends Specification {
-
-    MetricRegistry registry
-
-    void setup() {
-        registry = applicationContext.getBean('yammerMetricsRegistry')
-    }
 
     static doWithSpring = {
         yammerMetricsRegistry MetricRegistry
     }
 
     void 'test markMeter method'() {
+        setup:
+        def registry = applicationContext.yammerMetricsRegistry
+        def obj = new SomeClass()
+
         when:
-        controller.someAction()
-        controller.someAction()
-        controller.someAction()
+        obj.someAction()
+        obj.someAction()
+        obj.someAction()
 
         then:
         registry.meter('stuff').count == 3
     }
 }
 
-@Controller
-class SomeController implements Meterable {
+class SomeClass implements Meterable {
 
     def someAction() {
         markMeter 'stuff'
+
+        // carry on...
     }
 }
