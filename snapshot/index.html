@@ -659,7 +659,41 @@ need to be registed in the Spring application context.  Below are examples of ho
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"></code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">com.codahale.metrics.MetricRegistry</span>
+<span class="keyword">import</span> <span class="include">grails.test.mixin.TestMixin</span>
+<span class="keyword">import</span> <span class="include">grails.test.mixin.support.GrailsUnitTestMixin</span>
+<span class="keyword">import</span> <span class="include">spock.lang.Specification</span>
+
+<span class="annotation">@TestMixin</span>(GrailsUnitTestMixin)
+<span class="type">class</span> <span class="class">MeterableSpec</span> <span class="directive">extends</span> Specification {
+
+    <span class="directive">static</span> doWithSpring = {
+        yammerMetricsRegistry MetricRegistry
+    }
+
+    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test markMeter method</span><span class="delimiter">'</span></span>() {
+        <span class="key">setup</span>:
+        <span class="keyword">def</span> registry = applicationContext.yammerMetricsRegistry
+        <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeClass()
+
+        <span class="key">when</span>:
+        obj.someAction()
+        obj.someAction()
+        obj.someAction()
+
+        <span class="key">then</span>:
+        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
+    }
+}
+
+<span class="type">class</span> <span class="class">SomeClass</span> <span class="directive">implements</span> Meterable {
+
+    <span class="keyword">def</span> <span class="function">someAction</span>() {
+        markMeter <span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>
+
+        <span class="comment">// ...</span>
+    }
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -826,7 +860,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-07 03:56:53 UTC
+Last updated 2016-03-07 04:01:15 UTC
 </div>
 </div>
 </body>

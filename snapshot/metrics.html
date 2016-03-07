@@ -523,7 +523,41 @@ need to be registed in the Spring application context.  Below are examples of ho
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy"></code></pre>
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">import com.codahale.metrics.MetricRegistry
+import grails.test.mixin.TestMixin
+import grails.test.mixin.support.GrailsUnitTestMixin
+import spock.lang.Specification
+
+@TestMixin(GrailsUnitTestMixin)
+class MeterableSpec extends Specification {
+
+    static doWithSpring = {
+        yammerMetricsRegistry MetricRegistry
+    }
+
+    void 'test markMeter method'() {
+        setup:
+        def registry = applicationContext.yammerMetricsRegistry
+        def obj = new SomeClass()
+
+        when:
+        obj.someAction()
+        obj.someAction()
+        obj.someAction()
+
+        then:
+        registry.meter('some meter').count == 3
+    }
+}
+
+class SomeClass implements Meterable {
+
+    def someAction() {
+        markMeter 'some meter'
+
+        // ...
+    }
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -594,7 +628,7 @@ grails:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-07 03:56:53 UTC
+Last updated 2016-03-07 04:01:15 UTC
 </div>
 </div>
 </body>
