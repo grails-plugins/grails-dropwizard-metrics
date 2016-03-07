@@ -17,14 +17,14 @@ package grails.plugin.yammer.metrics.meters
 
 import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
-import grails.web.api.ServletAttributes
+import grails.util.Holders
 import groovy.transform.CompileStatic
 
 @CompileStatic
-trait Meterable extends ServletAttributes {
+trait Meterable {
 
     private MetricRegistry retrieveMetricRegistry() {
-        applicationContext.getBean('yammerMetricsRegistry', MetricRegistry)
+        Holders.applicationContext.getBean('yammerMetricsRegistry', MetricRegistry)
     }
 
     private Meter retrieveMeter(String name) {
