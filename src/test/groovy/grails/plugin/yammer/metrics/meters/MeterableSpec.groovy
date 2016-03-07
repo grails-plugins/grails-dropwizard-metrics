@@ -1,5 +1,7 @@
 package grails.plugin.yammer.metrics.meters
 
+// tag::test_class[]
+
 import com.codahale.metrics.MetricRegistry
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
@@ -37,4 +39,4 @@ class SomeClass implements Meterable {
     }
 }
 // end::sample_class[]
-
+// end::test_class[]
