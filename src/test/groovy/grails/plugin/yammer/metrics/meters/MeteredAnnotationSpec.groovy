@@ -1,21 +1,22 @@
 package grails.plugin.yammer.metrics.meters
 
+// tag::test_class[]
+
 import com.codahale.metrics.MetricRegistry
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
-import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)
-class MeterableSpec extends Specification {
+class MeteredAnnotationSpec {
 
     static doWithSpring = {
         yammerMetricsRegistry MetricRegistry
     }
 
-    void 'test markMeter method'() {
+    void 'test the @Metered annotation'() {
         setup:
         def registry = applicationContext.yammerMetricsRegistry
-        def obj = new SomeClass()
+        def obj = new SomeOtherClass()
 
         when:
         obj.someAction()
@@ -28,13 +29,13 @@ class MeterableSpec extends Specification {
 }
 
 // tag::sample_class[]
-class SomeClass implements Meterable {
+class SomeOtherClass {
 
-    def someAction() {
-        markMeter 'some meter'
-
+    @Metered('some meter')
+    void someAction() {
         // ...
     }
 }
 // end::sample_class[]
+// end::test_class[]
 

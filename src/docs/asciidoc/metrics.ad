@@ -35,26 +35,31 @@ to access and increment a `Meter`.  Any class may implement the trait and take a
 
 [source,groovy]
 ----
-import grails.plugin.yammer.metrics.meters.Meterable
+include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeterableSpec.groovy[tags=sample_class,indent=0]
+----
 
-class SomeGroovyClass implements Meterable {
+The plugin provides the `grails.plugin.yammer.metrics.meters.Metered` annotation which may be applied to any method.
+If a method is marked with `@Metered`, every time the method is invoked, the meter with the specified name will
+automatically be incremeneted.
 
-    void someMethod() {
-        markMeter('myMeterName')
-
-        // ...
-    }
-}
+[source,groovy]
+----
+include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeteredAnnotationSpec.groovy[tags=sample_class,indent=0]
 ----
 
 ==== Unit Testing
 
 When unit testing code which invokes the `markMeter(String)` method a bean named `yammerMetricsRegistry` will
-need to be registed in the Spring application context.  Below is an example of that.
+need to be registed in the Spring application context.  Below are examples of how to do that.
 
 [source,groovy]
 ----
-include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeterableSpec.groovy[]
+include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeterableSpec.groovy[tags=test_class,indent=0]
+----
+
+[source,groovy]
+----
+include::{projectdir}/src/test/groovy/grails/plugin/yammer/metrics/meters/MeteredAnnotationSpec.groovy[tags=test_class,indent=0]
 ----
 
 === Exposing Metrics Data
