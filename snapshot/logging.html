@@ -428,33 +428,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <div class="paragraph">
 <p>The plugin provides support for automatically logging metrics at a scheduled interval.
-To enable logging assign a value to the <code>grails.yammer.metrics.reporterFrequency</code> config
+To enable logging assign a value to the <code>grails.dropwizard.metrics.reporterFrequency</code> config
 property to indicate how often the logging should occur.  The value represents the logging
 interval in seconds.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>grails:
-    yammer:
+    dropwizard:
         metrics:
             reporterFrequency: 30 # log every 30 seconds</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The logging is being done from a logger named <code>yammer.metrics.YammerMetricsGrailsPlugin</code> at
+<p>The logging is being done from a logger named <code>dropwizard.metrics.DropwizardMetricsGrailsPlugin</code> at
 the <code>INFO</code> level.  You may want to configure the level for that logger in <code>grails-app/conf/logback.groovy</code>
 as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>logger 'yammer.metrics.YammerMetricsGrailsPlugin',
+<pre class="highlight"><code>logger 'dropwizard.metrics.DropwizardMetricsGrailsPlugin',
         INFO, ['STDOUT'], false</code></pre>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-07 04:50:20 UTC
+Last updated 2016-03-08 01:15:47 UTC
 </div>
 </div>
 </body>
