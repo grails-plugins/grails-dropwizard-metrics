@@ -15,6 +15,7 @@
  */
 package grails.plugin.dropwizard
 
+import com.codahale.metrics.JmxReporter
 import com.codahale.metrics.Metric
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.MetricSet
@@ -94,6 +95,12 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
     void doWithApplicationContext() {
         def metricSetBeans = applicationContext.getBeansOfType(MetricSet)
         def registry = applicationContext.dropwizardMetricsRegistry
+
+        if(config.getProperty('grails.dropwizard.jmx.enabled', Boolean, false)) {
+            final JmxReporter reporter = JmxReporter.forRegistry(registry).build()
+            reporter.start()
+        }
+
         if (metricSetBeans) {
             for (Map.Entry entry : metricSetBeans) {
                 MetricSet set = entry.value
