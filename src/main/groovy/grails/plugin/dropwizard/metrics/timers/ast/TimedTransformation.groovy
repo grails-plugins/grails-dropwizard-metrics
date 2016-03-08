@@ -44,13 +44,13 @@ class TimedTransformation implements ASTTransformation {
 
         String timerNameFromAnnotation = annotationNode.getMember('value').getText()
 
-        ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
-        nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
-        nameMethodArguments.addExpression(new ConstantExpression(timerNameFromAnnotation))
         Expression timerNameExpression
 
         Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
         if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
+            ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
+            nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
+            nameMethodArguments.addExpression(new ConstantExpression(timerNameFromAnnotation))
             timerNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
         } else {
             timerNameExpression = new ConstantExpression(timerNameFromAnnotation)

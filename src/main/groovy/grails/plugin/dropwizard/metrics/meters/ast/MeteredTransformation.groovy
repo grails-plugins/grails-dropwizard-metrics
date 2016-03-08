@@ -46,13 +46,13 @@ class MeteredTransformation implements ASTTransformation {
 
         String meterNameFromAnnotation = annotationNode.getMember('value').getText()
 
-        ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
-        nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
-        nameMethodArguments.addExpression(new ConstantExpression(meterNameFromAnnotation))
         Expression meterNameExpression
 
         Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
         if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
+            ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
+            nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
+            nameMethodArguments.addExpression(new ConstantExpression(meterNameFromAnnotation))
             meterNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
         } else {
             meterNameExpression = new ConstantExpression(meterNameFromAnnotation)
