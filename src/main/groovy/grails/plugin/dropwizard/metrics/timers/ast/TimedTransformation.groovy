@@ -45,7 +45,6 @@ class TimedTransformation extends NamedMetricTransformation {
                 new VariableExpression(contextVariableName, ClassHelper.make(Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
 
         final BlockStatement newCode = new BlockStatement()
-        newCode.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'println', timerNameExpression)))
         newCode.addStatement(new ExpressionStatement(declareTimerExpression))
 
         final Expression stopTimer = new MethodCallExpression(new VariableExpression(contextVariableName), 'stop', new ArgumentListExpression())
