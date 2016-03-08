@@ -47,6 +47,11 @@ automatically be incremeneted.
 include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/meters/MeteredAnnotationSpec.groovy[tags=sample_class,indent=0]
 ----
 
+The `@Metered` annotation supports an optional `useClassPrefix` attribute which when set to `true` will cause the name
+of the associated meter to be prefixed with the fully qualified name of the class which defines the annotated method.
+
+
+
 === Timers
 
 [quote, The Dropwizard Metrics Documentation]
@@ -62,7 +67,7 @@ include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/timers/Ti
 ----
 
 The `@Timed` annotation supports an optional `useClassPrefix` attribute which when set to `true` will cause the name
-of the associated timer to be prefixed with the fully qualified class name.
+of the associated timer to be prefixed with the fully qualified name of the class which defines the annotated method.
 
 === Unit Testing
 

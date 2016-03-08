@@ -24,4 +24,5 @@ import java.lang.annotation.Target
 @Target(ElementType.METHOD)
 @interface Metered {
     String value()
+    boolean useClassPrefix() default false
 }

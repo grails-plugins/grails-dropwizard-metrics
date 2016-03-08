@@ -15,13 +15,16 @@
  */
 package grails.plugin.dropwizard.metrics.meters.ast
 
+import com.codahale.metrics.MetricRegistry
 import grails.util.Holders
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
@@ -42,7 +45,20 @@ class MeteredTransformation implements ASTTransformation {
         MethodCallExpression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('dropwizardMetricsRegistry'))
 
         String meterNameFromAnnotation = annotationNode.getMember('value').getText()
-        MethodCallExpression meterExpression = new MethodCallExpression(getBeanExpression, 'meter', new ConstantExpression(meterNameFromAnnotation))
+
+        ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
+        nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
+        nameMethodArguments.addExpression(new ConstantExpression(meterNameFromAnnotation))
+        Expression meterNameExpression
+
+        Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
+        if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
+            meterNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
+        } else {
+            meterNameExpression = new ConstantExpression(meterNameFromAnnotation)
+        }
+
+        MethodCallExpression meterExpression = new MethodCallExpression(getBeanExpression, 'meter', meterNameExpression)
         MethodCallExpression markExpression = new MethodCallExpression(meterExpression, 'mark', new ArgumentListExpression())
 
         BlockStatement newCode = new BlockStatement()

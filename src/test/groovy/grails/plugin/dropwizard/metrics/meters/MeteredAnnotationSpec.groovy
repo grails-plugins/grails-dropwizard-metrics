@@ -27,6 +27,34 @@ class MeteredAnnotationSpec extends Specification {
         then:
         registry.meter('some meter').count == 3
     }
+
+    void 'test the @Metered annotation with useClassPrefix set to true'() {
+        setup:
+        def registry = applicationContext.dropwizardMetricsRegistry
+        def obj = new SomeOtherClass()
+
+        when:
+        obj.someOtherAction()
+        obj.someOtherAction()
+        obj.someOtherAction()
+
+        then:
+        registry.meter('grails.plugin.dropwizard.metrics.meters.SomeOtherClass.some other meter').count == 3
+    }
+
+    void 'test the @Metered annotation with useClassPrefix set to false'() {
+        setup:
+        def registry = applicationContext.dropwizardMetricsRegistry
+        def obj = new SomeOtherClass()
+
+        when:
+        obj.yetAnotherAction()
+        obj.yetAnotherAction()
+        obj.yetAnotherAction()
+
+        then:
+        registry.meter('yet another meter').count == 3
+    }
 }
 
 // tag::sample_class[]
@@ -34,6 +62,14 @@ class SomeOtherClass {
 
     @Metered('some meter')
     void someAction() {
+        // ...
+    }
+    @Metered(value='some other meter', useClassPrefix = true)
+    void someOtherAction() {
+        // ...
+    }
+    @Metered(value='yet another meter', useClassPrefix = false)
+    void yetAnotherAction() {
         // ...
     }
 }
