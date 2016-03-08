@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.yammer.metrics.meters
+package grails.plugin.dropwizard.metrics.meters
 
 import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 trait Meterable {
 
     private MetricRegistry retrieveMetricRegistry() {
-        Holders.applicationContext.getBean('yammerMetricsRegistry', MetricRegistry)
+        Holders.applicationContext.getBean('dropwizardMetricsRegistry', MetricRegistry)
     }
 
     private Meter retrieveMeter(String name) {

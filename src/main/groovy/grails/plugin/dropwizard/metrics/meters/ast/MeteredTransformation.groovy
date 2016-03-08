@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.yammer.metrics.meters.ast
+package grails.plugin.dropwizard.metrics.meters.ast
 
 import grails.util.Holders
 import org.codehaus.groovy.ast.ASTNode
@@ -39,7 +39,7 @@ class MeteredTransformation implements ASTTransformation {
         MethodNode methodNode = nodes[1]
 
         StaticMethodCallExpression getApplicationContextExpression = new StaticMethodCallExpression(ClassHelper.make(Holders), 'getApplicationContext', new ArgumentListExpression())
-        MethodCallExpression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('yammerMetricsRegistry'))
+        MethodCallExpression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('dropwizardMetricsRegistry'))
 
         String meterNameFromAnnotation = annotationNode.getMember('value').getText()
         MethodCallExpression meterExpression = new MethodCallExpression(getBeanExpression, 'meter', new ConstantExpression(meterNameFromAnnotation))

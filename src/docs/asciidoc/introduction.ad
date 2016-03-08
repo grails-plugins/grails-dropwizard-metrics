@@ -1,2 +1,2 @@
-The Yammer Metrics plugin provides support for monitoring health checks and metrics
+The Dropwizard Metrics plugin provides support for monitoring health checks and metrics
 monitoring for Grails 3 applications.

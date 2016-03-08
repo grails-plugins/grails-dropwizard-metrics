@@ -2,7 +2,7 @@
 grails:
     profile: web-plugin
     codegen:
-        defaultPackage: yammer.metrics
+        defaultPackage: dropwizard.metrics
 info:
     app:
         name: '@info.app.name@'

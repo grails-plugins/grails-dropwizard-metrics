@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.yammer.metrics.meters
+package grails.plugin.dropwizard.metrics.meters
 
 import org.codehaus.groovy.transform.GroovyASTTransformationClass
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Target
 
-@GroovyASTTransformationClass('grails.plugin.yammer.metrics.meters.ast.MeteredTransformation')
+@GroovyASTTransformationClass('grails.plugin.dropwizard.metrics.meters.ast.MeteredTransformation')
 @Target(ElementType.METHOD)
 @interface Metered {
     String value()

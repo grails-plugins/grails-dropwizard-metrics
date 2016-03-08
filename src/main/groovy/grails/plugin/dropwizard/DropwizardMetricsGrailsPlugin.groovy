@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package yammer.metrics
+package grails.plugin.dropwizard
 
 import com.codahale.metrics.Metric
 import com.codahale.metrics.MetricRegistry
@@ -34,7 +34,7 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean
 import java.util.concurrent.TimeUnit
 
 @Slf4j
-class YammerMetricsGrailsPlugin extends Plugin {
+class DropwizardMetricsGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "3.0.14 > *"
@@ -43,16 +43,16 @@ class YammerMetricsGrailsPlugin extends Plugin {
         "grails-app/views/error.gsp"
     ]
 
-    def title = "Yammer Metrics" // Headline display name of the plugin
+    def title = "Dropwizard Metrics" // Headline display name of the plugin
     def author = "Jeff Scott Brown"
     def authorEmail = "brownj@ociweb.com"
     def description = '''\
-Grails 3 plugin providing convenient access to the Yammer Metrics library.
+Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
 '''
     def profiles = ['web']
 
     // URL to the plugin's documentation
-    def documentation = "http://grails-plugins.github.io/grails-yammer-metrics"
+    def documentation = "http://grails-plugins.github.io/grails-dropwizard-metrics"
 
     // License: one of 'APACHE', 'GPL2', 'GPL3'
     def license = "APACHE"
@@ -61,39 +61,39 @@ Grails 3 plugin providing convenient access to the Yammer Metrics library.
     def organization = [ name: "OCI", url: "http://www.ociweb.com/" ]
 
     // Location of the plugin's issue tracker.
-    def issueManagement = [ system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-yammer-metrics/issues" ]
+    def issueManagement = [ system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-dropwizard-metrics/issues" ]
 
     // Online location of the plugin's browseable source code.
-    def scm = [ url: "https://github.com/grails-plugins/grails-yammer-metrics" ]
+    def scm = [ url: "https://github.com/grails-plugins/grails-dropwizard-metrics" ]
 
     Closure doWithSpring() {
         { ->
-            yammerHealthCheckRegistry(HealthCheckRegistry)
+            dropwizardHealthCheckRegistry(HealthCheckRegistry)
 
-            String healthCheckUri = config.getProperty('grails.yammer.health.uri', String, null)
+            String healthCheckUri = config.getProperty('grails.dropwizard.health.uri', String, null)
             if(healthCheckUri) {
-                yammerHealthCheckServlet(HealthCheckServlet, ref('yammerHealthCheckRegistry'))
-                yammerHealthCheckServletRegistryBean(ServletRegistrationBean, ref('yammerHealthCheckServlet'), healthCheckUri)
+                dropwizardHealthCheckServlet(HealthCheckServlet, ref('dropwizardHealthCheckRegistry'))
+                dropwizardHealthCheckServletRegistryBean(ServletRegistrationBean, ref('dropwizardHealthCheckServlet'), healthCheckUri)
             }
 
-            yammerMetricsRegistry MetricRegistry
-            String metricsUri = config.getProperty('grails.yammer.metrics.uri', String, null)
+            dropwizardMetricsRegistry MetricRegistry
+            String metricsUri = config.getProperty('grails.dropwizard.metrics.uri', String, null)
             if(metricsUri) {
-                yammerMetricsServlet(MetricsServlet, ref('yammerMetricsRegistry'))
-                yammerMetricsServletRegistryBean(ServletRegistrationBean, ref('yammerMetricsServlet'), metricsUri)
+                dropwizardMetricsServlet(MetricsServlet, ref('dropwizardMetricsRegistry'))
+                dropwizardMetricsServletRegistryBean(ServletRegistrationBean, ref('dropwizardMetricsServlet'), metricsUri)
             }
 
-            yammerGarbageCollectorMetricSet GarbageCollectorMetricSet
-            yammerMemoryUsageGaugeSet MemoryUsageGaugeSet
-            yammerThreadStatesGaugeSet ThreadStatesGaugeSet
-            yammerThreadDeadlockHealthCheck ThreadDeadlockHealthCheck
+            dropwizardGarbageCollectorMetricSet GarbageCollectorMetricSet
+            dropwizardMemoryUsageGaugeSet MemoryUsageGaugeSet
+            dropwizardThreadStatesGaugeSet ThreadStatesGaugeSet
+            dropwizardThreadDeadlockHealthCheck ThreadDeadlockHealthCheck
         }
     }
 
     @Override
     void doWithApplicationContext() {
         def metricSetBeans = applicationContext.getBeansOfType(MetricSet)
-        def registry = applicationContext.yammerMetricsRegistry
+        def registry = applicationContext.dropwizardMetricsRegistry
         if (metricSetBeans) {
             for (Map.Entry entry : metricSetBeans) {
                 MetricSet set = entry.value
@@ -105,14 +105,14 @@ Grails 3 plugin providing convenient access to the Yammer Metrics library.
         }
         def healthCheckBeans = applicationContext.getBeansOfType(HealthCheck)
         if(healthCheckBeans) {
-            def healthRegistry = applicationContext.yammerHealthCheckRegistry
+            def healthRegistry = applicationContext.dropwizardHealthCheckRegistry
             for(Map.Entry entry : healthCheckBeans) {
                 HealthCheck check = entry.value
                 String beanName = entry.key
                 healthRegistry.register beanName, check
             }
         }
-        def logReporterFequency = config.getProperty('grails.yammer.metrics.reporterFrequency', Integer, 0)
+        def logReporterFequency = config.getProperty('grails.dropwizard.metrics.reporterFrequency', Integer, 0)
         if(logReporterFequency > 0) {
             Slf4jReporter logbackReporter = Slf4jReporter.forRegistry(registry).outputTo(log)
                     .convertRatesTo(TimeUnit.SECONDS)
@@ -126,7 +126,7 @@ Grails 3 plugin providing convenient access to the Yammer Metrics library.
             if (entry.value instanceof MetricSet) {
                 registerMetrics(beanName, entry.value, registry)
             } else {
-                registry.register "grails.yammer.${beanName}.${entry.key}", entry.value
+                registry.register "grails.dropwizard.${beanName}.${entry.key}", entry.value
             }
         }
     }

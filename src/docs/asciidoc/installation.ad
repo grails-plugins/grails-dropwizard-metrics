@@ -1,5 +1,5 @@
-To add the Yammer Metrics plugin to an application add the following dependency to the dependencies block of your build.gradle where VERSION is the version of the plugin you plan to use:
+To add the Dropwizard Metrics plugin to an application add the following dependency to the dependencies block of your build.gradle where VERSION is the version of the plugin you plan to use:
 
 ```
-compile "org.grails.plugins:yammer-metrics:VERSION"
+compile "org.grails.plugins:dropwizard-metrics:VERSION"
 ```

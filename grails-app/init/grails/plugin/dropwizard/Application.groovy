@@ -1,4 +1,4 @@
-package yammer.metrics
+package grails.plugin.dropwizard
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
