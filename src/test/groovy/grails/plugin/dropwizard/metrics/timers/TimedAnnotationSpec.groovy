@@ -5,9 +5,10 @@ package grails.plugin.dropwizard.metrics.timers
 import com.codahale.metrics.MetricRegistry
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)
-class TimedAnnotationSpec {
+class TimedAnnotationSpec extends Specification {
 
     static doWithSpring = {
         dropwizardMetricsRegistry MetricRegistry
@@ -24,7 +25,7 @@ class TimedAnnotationSpec {
         obj.someAction()
 
         then:
-        registry.meter('some timer').count == 3
+        registry.timer('grails.plugin.dropwizard.metrics.timers.SomeTimedClass.some timer').count == 3
     }
 }
 

@@ -3,9 +3,10 @@ package grails.plugin.dropwizard.metrics.meters
 import com.codahale.metrics.MetricRegistry
 import grails.artefact.Artefact
 import grails.test.mixin.TestFor
+import spock.lang.Specification
 
 @TestFor(SomeController)
-class MeteredControllerActionSpec {
+class MeteredControllerActionSpec extends Specification {
 
     static doWithSpring = {
         dropwizardMetricsRegistry MetricRegistry

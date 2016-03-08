@@ -5,9 +5,10 @@ package grails.plugin.dropwizard.metrics.meters
 import com.codahale.metrics.MetricRegistry
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)
-class MeteredAnnotationSpec {
+class MeteredAnnotationSpec extends Specification {
 
     static doWithSpring = {
         dropwizardMetricsRegistry MetricRegistry
