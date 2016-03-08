@@ -15,10 +15,9 @@
  */
 package grails.plugin.dropwizard.metrics.timers.ast
 
-import com.codahale.metrics.MetricRegistry
-import grails.util.Holders
-import org.codehaus.groovy.ast.ASTNode
-import org.codehaus.groovy.ast.AnnotationNode
+import com.codahale.metrics.Timer
+import grails.plugin.dropwizard.metrics.NamedMetricTransformation
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.*
@@ -26,50 +25,31 @@ import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.ast.stmt.TryCatchStatement
-import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.syntax.Token
 import org.codehaus.groovy.syntax.Types
-import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 @GroovyASTTransformation
-class TimedTransformation implements ASTTransformation {
-    @Override
-    void visit(ASTNode[] nodes, SourceUnit source) {
-        AnnotationNode annotationNode = nodes[0]
-        MethodNode methodNode = nodes[1]
+@CompileStatic
+class TimedTransformation extends NamedMetricTransformation {
 
-        Expression getApplicationContextExpression = new StaticMethodCallExpression(ClassHelper.make(Holders), 'getApplicationContext', new ArgumentListExpression())
-        Expression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('dropwizardMetricsRegistry'))
+    protected void decorateMethodWithMetrics(final MethodCallExpression metricsRegistryExpression,
+                                             final Expression timerNameExpression,
+                                             final MethodNode methodNode) {
+        final Expression timerExpression = new MethodCallExpression(metricsRegistryExpression, 'timer', timerNameExpression)
 
-        String timerNameFromAnnotation = annotationNode.getMember('value').getText()
+        final Expression timeExpression = new MethodCallExpression(timerExpression, 'time', new ArgumentListExpression())
 
-        Expression timerNameExpression
+        final String contextVariableName = '$$_dropwizard_time'
+        final Expression declareTimerExpression = new DeclarationExpression(
+                new VariableExpression(contextVariableName, ClassHelper.make(Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
 
-        Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
-        if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
-            ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
-            nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
-            nameMethodArguments.addExpression(new ConstantExpression(timerNameFromAnnotation))
-            timerNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
-        } else {
-            timerNameExpression = new ConstantExpression(timerNameFromAnnotation)
-        }
-
-        Expression timerExpression = new MethodCallExpression(getBeanExpression, 'timer', timerNameExpression)
-
-        Expression timeExpression = new MethodCallExpression(timerExpression, 'time', new ArgumentListExpression())
-
-        String contextVariableName = '$$_dropwizard_time'
-        Expression declareTimerExpression = new DeclarationExpression(
-                new VariableExpression(contextVariableName, ClassHelper.make(com.codahale.metrics.Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
-
-        BlockStatement newCode = new BlockStatement()
+        final BlockStatement newCode = new BlockStatement()
         newCode.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'println', timerNameExpression)))
         newCode.addStatement(new ExpressionStatement(declareTimerExpression))
 
-        Expression stopTimer = new MethodCallExpression(new VariableExpression(contextVariableName), 'stop', new ArgumentListExpression())
-        Statement tryCatchStatement = new TryCatchStatement(methodNode.code, new ExpressionStatement(stopTimer))
+        final Expression stopTimer = new MethodCallExpression(new VariableExpression(contextVariableName), 'stop', new ArgumentListExpression())
+        final Statement tryCatchStatement = new TryCatchStatement(methodNode.code, new ExpressionStatement(stopTimer))
         newCode.addStatement(tryCatchStatement)
 
         methodNode.code = newCode

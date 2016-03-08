@@ -15,59 +15,36 @@
  */
 package grails.plugin.dropwizard.metrics.meters.ast
 
-import com.codahale.metrics.MetricRegistry
-import grails.util.Holders
-import org.codehaus.groovy.ast.ASTNode
-import org.codehaus.groovy.ast.AnnotationNode
-import org.codehaus.groovy.ast.ClassHelper
+import grails.plugin.dropwizard.metrics.NamedMetricTransformation
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
-import org.codehaus.groovy.ast.expr.ClassExpression
-import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
-import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
-import org.codehaus.groovy.control.SourceUnit
-import org.codehaus.groovy.transform.ASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 @GroovyASTTransformation
-class MeteredTransformation implements ASTTransformation {
+@CompileStatic
+class MeteredTransformation extends NamedMetricTransformation {
+
     @Override
-    void visit(ASTNode[] nodes, SourceUnit source) {
-        AnnotationNode annotationNode = nodes[0]
-        MethodNode methodNode = nodes[1]
+    protected void decorateMethodWithMetrics(final MethodCallExpression metricsRegistryExpression,
+                                             final Expression meterNameExpression,
+                                             final MethodNode methodNode) {
+        final Expression meterExpression = new MethodCallExpression(metricsRegistryExpression, 'meter', meterNameExpression)
+        final Expression markExpression = new MethodCallExpression(meterExpression, 'mark', new ArgumentListExpression())
 
-        StaticMethodCallExpression getApplicationContextExpression = new StaticMethodCallExpression(ClassHelper.make(Holders), 'getApplicationContext', new ArgumentListExpression())
-        MethodCallExpression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('dropwizardMetricsRegistry'))
-
-        String meterNameFromAnnotation = annotationNode.getMember('value').getText()
-
-        Expression meterNameExpression
-
-        Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
-        if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
-            ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
-            nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
-            nameMethodArguments.addExpression(new ConstantExpression(meterNameFromAnnotation))
-            meterNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
-        } else {
-            meterNameExpression = new ConstantExpression(meterNameFromAnnotation)
-        }
-
-        MethodCallExpression meterExpression = new MethodCallExpression(getBeanExpression, 'meter', meterNameExpression)
-        MethodCallExpression markExpression = new MethodCallExpression(meterExpression, 'mark', new ArgumentListExpression())
-
-        BlockStatement newCode = new BlockStatement()
+        final BlockStatement newCode = new BlockStatement()
 
         newCode.addStatement(new ExpressionStatement(markExpression))
 
-        Statement originalMethodCode = methodNode.code
+        final Statement originalMethodCode = methodNode.code
         newCode.addStatement(originalMethodCode)
 
         methodNode.code = newCode
+
     }
 }
