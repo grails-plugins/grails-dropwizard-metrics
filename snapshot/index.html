@@ -527,7 +527,9 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_metricregistry_beans">3.1. MetricRegistry Beans</a></li>
 <li><a href="#_default_metricregistry_beans">3.2. Default MetricRegistry Beans</a></li>
 <li><a href="#_marking_meters">3.3. Marking Meters</a></li>
-<li><a href="#_exposing_metrics_data">3.4. Exposing Metrics Data</a></li>
+<li><a href="#_timers">3.4. Timers</a></li>
+<li><a href="#_unit_testing">3.5. Unit Testing</a></li>
+<li><a href="#_exposing_metrics_data">3.6. Exposing Metrics Data</a></li>
 </ul>
 </li>
 <li><a href="#_health_checks">4. Health Checks</a>
@@ -636,7 +638,7 @@ to access and increment a <code>Meter</code>.  Any class may implement the trait
 </div>
 </div>
 <div class="paragraph">
-<p>The plugin provides the <code>Metered</code> annotation which may be applied to any method.
+<p>The plugin provides the <code>grails.plugin.dropwizard.metrics.meters.Metered</code> annotation which may be applied to any method.
 If a method is marked with <code>@Metered</code>, every time the method is invoked, the meter with the specified name will
 automatically be incremeneted.</p>
 </div>
@@ -651,10 +653,38 @@ automatically be incremeneted.</p>
 }</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_unit_testing">3.3.1. Unit Testing</h4>
+</div>
+<div class="sect2">
+<h3 id="_timers">3.4. Timers</h3>
+<div class="quoteblock">
+<blockquote>
+A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
+</blockquote>
+<div class="attribution">
+&#8212; The Dropwizard Metrics Documentation
+</div>
+</div>
 <div class="paragraph">
-<p>When unit testing code which invokes the <code>markMeter(String)</code> method a bean named <code>dropwizardMetricsRegistry</code> will
+<p>The plugin provides the <code>grails.plugin.dropwizard.metrics.timers.Timed</code> annotation which may be applied to any method.
+If a method is marked with <code>@Timed</code>, every time the method is invoked, the timer with the specified name will
+automatically be started.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">SomeTimedClass</span> {
+
+    <span class="annotation">@Timed</span>(<span class="string"><span class="delimiter">'</span><span class="content">some timer</span><span class="delimiter">'</span></span>)
+    <span class="type">void</span> someAction() {
+        <span class="comment">// ...</span>
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unit_testing">3.5. Unit Testing</h3>
+<div class="paragraph">
+<p>When unit testing code which uses any of the plugin&#8217;s code generation techniques (<code>@Timed</code>, <code>@Metered</code>, etc&#8230;&#8203;) a bean named <code>dropwizardMetricsRegistry</code> will
 need to be registed in the Spring application context.  Below are examples of how to do that.</p>
 </div>
 <div class="listingblock">
@@ -734,9 +764,8 @@ need to be registed in the Spring application context.  Below are examples of ho
 </div>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_exposing_metrics_data">3.4. Exposing Metrics Data</h3>
+<h3 id="_exposing_metrics_data">3.6. Exposing Metrics Data</h3>
 <div class="paragraph">
 <p>The plugin supports exposing access to metrics data through a URI in the web application.  To enable
 exposing the data assign a value to the <code>grails.dropwizard.metrics.uri</code> property to indicate where the
@@ -860,7 +889,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-08 01:19:49 UTC
+Last updated 2016-03-08 02:16:36 UTC
 </div>
 </div>
 </body>
