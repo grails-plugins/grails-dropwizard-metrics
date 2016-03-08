@@ -40,7 +40,7 @@ include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/meters/Me
 
 The plugin provides the `grails.plugin.dropwizard.metrics.meters.Metered` annotation which may be applied to any method.
 If a method is marked with `@Metered`, every time the method is invoked, the meter with the specified name will
-automatically be incremeneted.
+automatically be incremented.
 
 [source,groovy]
 ----
