@@ -44,12 +44,19 @@ class TimedTransformation implements ASTTransformation {
 
         String timerNameFromAnnotation = annotationNode.getMember('value').getText()
 
-        ArgumentListExpression args = new ArgumentListExpression()
-        args.addExpression(new ClassExpression(methodNode.declaringClass))
-        args.addExpression(new ConstantExpression(timerNameFromAnnotation))
-        StaticMethodCallExpression getTimerNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', args)
+        ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
+        nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
+        nameMethodArguments.addExpression(new ConstantExpression(timerNameFromAnnotation))
+        Expression timerNameExpression
 
-        Expression timerExpression = new MethodCallExpression(getBeanExpression, 'timer', getTimerNameExpression)
+        Expression useClassPrefix = annotationNode.getMember('useClassPrefix')
+        if(useClassPrefix instanceof ConstantExpression && ((ConstantExpression)useClassPrefix).value) {
+            timerNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
+        } else {
+            timerNameExpression = new ConstantExpression(timerNameFromAnnotation)
+        }
+
+        Expression timerExpression = new MethodCallExpression(getBeanExpression, 'timer', timerNameExpression)
 
         Expression timeExpression = new MethodCallExpression(timerExpression, 'time', new ArgumentListExpression())
 
@@ -58,6 +65,7 @@ class TimedTransformation implements ASTTransformation {
                 new VariableExpression(contextVariableName, ClassHelper.make(com.codahale.metrics.Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
 
         BlockStatement newCode = new BlockStatement()
+        newCode.addStatement(new ExpressionStatement(new MethodCallExpression(new VariableExpression('this'), 'println', timerNameExpression)))
         newCode.addStatement(new ExpressionStatement(declareTimerExpression))
 
         Expression stopTimer = new MethodCallExpression(new VariableExpression(contextVariableName), 'stop', new ArgumentListExpression())
