@@ -38,7 +38,7 @@ to access and increment a `Meter`.  Any class may implement the trait and take a
 include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/meters/MeterableSpec.groovy[tags=sample_class,indent=0]
 ----
 
-The plugin provides the `Metered` annotation which may be applied to any method.
+The plugin provides the `grails.plugin.dropwizard.metrics.meters.Metered` annotation which may be applied to any method.
 If a method is marked with `@Metered`, every time the method is invoked, the meter with the specified name will
 automatically be incremeneted.
 
@@ -47,9 +47,23 @@ automatically be incremeneted.
 include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/meters/MeteredAnnotationSpec.groovy[tags=sample_class,indent=0]
 ----
 
-==== Unit Testing
+=== Timers
 
-When unit testing code which invokes the `markMeter(String)` method a bean named `dropwizardMetricsRegistry` will
+[quote, The Dropwizard Metrics Documentation]
+A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
+
+The plugin provides the `grails.plugin.dropwizard.metrics.timers.Timed` annotation which may be applied to any method.
+If a method is marked with `@Timed`, every time the method is invoked, the timer with the specified name will
+automatically be started.
+
+[source,groovy]
+----
+include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/timers/TimedAnnotationSpec.groovy[tags=sample_class,indent=0]
+----
+
+=== Unit Testing
+
+When unit testing code which uses any of the plugin's code generation techniques (`@Timed`, `@Metered`, etc...) a bean named `dropwizardMetricsRegistry` will
 need to be registed in the Spring application context.  Below are examples of how to do that.
 
 [source,groovy]
