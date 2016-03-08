@@ -10,11 +10,11 @@ grails:
             reporterFrequency: 30 # log every 30 seconds
 ```
 
-The logging is being done from a logger named `dropwizard.metrics.DropwizardMetricsGrailsPlugin` at
+The logging is being done from a logger named `grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin` at
 the `INFO` level.  You may want to configure the level for that logger in `grails-app/conf/logback.groovy`
 as shown below.
 
 ```
-logger 'dropwizard.metrics.DropwizardMetricsGrailsPlugin',
+logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
         INFO, ['STDOUT'], false
 ```
