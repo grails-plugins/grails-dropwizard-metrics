@@ -1,7 +1,6 @@
 === HealthCheck Beans
 
-The plugin will discover all of the
-https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/health/HealthCheck.html[HealthCheck]
+The plugin will discover all of the `org.springframework.boot.actuate.health.HealthIndicator`
 instances that are found in the Spring application context and active them.  An application may provide
 any number of `HealthCheck` beans.
 
