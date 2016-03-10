@@ -424,7 +424,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel2">
 <li><a href="#_healthcheck_beans">HealthCheck Beans</a></li>
-<li><a href="#_default_healthcheck_beans">Default HealthCheck Beans</a></li>
 <li><a href="#_exposing_health_check_data">Exposing Health Check Data</a></li>
 </ul>
 </div>
@@ -438,30 +437,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 instances that are found in the Spring application context and active them.  An application may provide
 any number of <code>HealthCheck</code> beans.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_default_healthcheck_beans">Default HealthCheck Beans</h3>
-<div class="paragraph">
-<p>The plugin automatically adds the following <code>HealthCheck</code> beans to the Spring application context.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Bean Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropwizardThreadDeadlockHealthCheck</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/health/jvm/ThreadDeadlockHealthCheck.html">com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck</a></p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect2">
 <h3 id="_exposing_health_check_data">Exposing Health Check Data</h3>
@@ -492,7 +467,7 @@ TBD - notes on configuring the endpoint.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 15:22:05 UTC
+Last updated 2016-03-10 15:26:28 UTC
 </div>
 </div>
 </body>
