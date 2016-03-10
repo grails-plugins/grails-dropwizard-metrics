@@ -89,7 +89,7 @@ asciidoctor {
 groovydoc.docTitle = 'Grails Dropwizard Metrics'
 groovydoc.destinationDir = new File(buildDir, 'docs/api')
 
-task docs(type:Copy, dependsOn:[groovydoc, asciidoctor])  {
-    from "$buildDir/asciidoc/html5"
-    into "$buildDir/docs"
-}
+asciidoctor.outputDir = new File(buildDir, 'docs')
+asciidoctor.separateOutputDirs = false
+
+task docs(dependsOn:[groovydoc, asciidoctor])
