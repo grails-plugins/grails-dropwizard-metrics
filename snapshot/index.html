@@ -524,7 +524,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_installation">2. Installation</a></li>
 <li><a href="#_metrics">3. Metrics</a>
 <ul class="sectlevel2">
-<li><a href="#_metricregistry_beans">3.1. MetricRegistry Beans</a></li>
+<li><a href="#_publicmetric_beans">3.1. PublicMetric Beans</a></li>
 <li><a href="#_marking_meters">3.2. Marking Meters</a></li>
 <li><a href="#_timers">3.3. Timers</a></li>
 <li><a href="#_unit_testing">3.4. Unit Testing</a></li>
@@ -572,12 +572,11 @@ compile "io.dropwizard.metrics:metrics-core"</code></pre>
 <h2 id="_metrics">3. Metrics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_metricregistry_beans">3.1. MetricRegistry Beans</h3>
+<h3 id="_publicmetric_beans">3.1. PublicMetric Beans</h3>
 <div class="paragraph">
-<p>The plugin will discover all of the
-<a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/MetricRegistry.html">MetricRegistry</a>
+<p>The plugin will discover all of the <code>org.springframework.boot.actuate.endpoint.PublicMetrics</code>
 instances that are found in the Spring application context and active them.  An application may provide
-any number of <code>MetricRegistry</code> beans.</p>
+any number of <code>PublicMetrics</code> beans.</p>
 </div>
 </div>
 <div class="sect2">
@@ -843,8 +842,7 @@ grails:
 <div class="sect2">
 <h3 id="_healthcheck_beans">4.1. HealthCheck Beans</h3>
 <div class="paragraph">
-<p>The plugin will discover all of the
-<a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/health/HealthCheck.html">HealthCheck</a>
+<p>The plugin will discover all of the <code>org.springframework.boot.actuate.health.HealthIndicator</code>
 instances that are found in the Spring application context and active them.  An application may provide
 any number of <code>HealthCheck</code> beans.</p>
 </div>
@@ -918,7 +916,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 15:26:28 UTC
+Last updated 2016-03-10 16:41:00 UTC
 </div>
 </div>
 </body>
