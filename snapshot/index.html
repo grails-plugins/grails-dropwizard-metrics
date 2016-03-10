@@ -559,8 +559,13 @@ monitoring for Grails 3 applications.</p>
 <div class="paragraph">
 <p>To add the Dropwizard Metrics plugin to an application add the following dependency to the dependencies block of your build.gradle:</p>
 </div>
-<div class="paragraph">
-<p><code>compile "org.grails.plugins:dropwizard-metrics:1.0.0.BUILD-SNAPSHOT"</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">compile "org.grails.plugins:dropwizard-metrics:1.0.0.BUILD-SNAPSHOT"
+
+// the need to add the following will be removed before release
+compile "io.dropwizard.metrics:metrics-core"</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -938,7 +943,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 14:48:53 UTC
+Last updated 2016-03-10 15:22:05 UTC
 </div>
 </div>
 </body>
