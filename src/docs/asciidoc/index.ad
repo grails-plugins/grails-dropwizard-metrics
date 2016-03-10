@@ -23,3 +23,7 @@ include::healthchecks.ad[]
 == Logging
 
 include::logging.ad[]
+
+== API Documentation
+
+API documentation may be found link:api/index.html[here].

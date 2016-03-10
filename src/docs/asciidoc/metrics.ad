@@ -30,7 +30,7 @@ The plugin automatically adds the following `MetricRegistry` beans to the Spring
 A meter measures the rate of events over time (e.g., “requests per second”). In addition to the mean rate, meters also
 track 1-, 5-, and 15-minute moving averages.
 
-The `Meterable` trait provides a `markMeter(String)` method which makes it easy
+The link:api/grails/plugin/dropwizard/metrics/meters/Meterable.html[Meterable] trait provides a `markMeter(String)` method which makes it easy
 to access and increment a `Meter`.  Any class may implement the trait and take advantage of this method.
 
 [source,groovy]
@@ -38,7 +38,7 @@ to access and increment a `Meter`.  Any class may implement the trait and take a
 include::{projectdir}/src/test/groovy/grails/plugin/dropwizard/metrics/meters/MeterableSpec.groovy[tags=sample_class,indent=0]
 ----
 
-The plugin provides the `grails.plugin.dropwizard.metrics.meters.Metered` annotation which may be applied to any method.
+The plugin provides the link:api/grails/plugin/dropwizard/metrics/meters/Metered.html[Metered] annotation which may be applied to any method.
 If a method is marked with `@Metered`, every time the method is invoked, the meter with the specified name will
 automatically be incremented.
 
@@ -57,7 +57,7 @@ of the associated meter to be prefixed with the fully qualified name of the clas
 [quote, The Dropwizard Metrics Documentation]
 A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
 
-The plugin provides the `grails.plugin.dropwizard.metrics.timers.Timed` annotation which may be applied to any method.
+The plugin provides the link:api/grails/plugin/dropwizard/metrics/timers/Timed.html[Timed] annotation which may be applied to any method.
 If a method is marked with `@Timed`, every time the method is invoked, the timer with the specified name will
 automatically be started.
 
