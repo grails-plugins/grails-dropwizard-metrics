@@ -22,19 +22,11 @@ The plugin automatically adds the following `HealthCheck` beans to the Spring ap
 
 The plugin supports exposing access to health check data through a URI in the web application.  To enable
 exposing the data assign a value to the `grails.dropwizard.health.uri` property to indicate where the
-data should be made available.
-
-```
----
-grails:
-    dropwizard:
-        health:
-            uri: /checkHealth
-```
-
-With that configuration in place a request to `/checkHealth` will be responded to with JSON provided by all
+data should be made available.  A request to `/health` will be responded to with JSON provided by all
  of the `HealthCheck` instances that are active in the application as shown below.
 
 ```
 {"dropwizardThreadDeadlockHealthCheck":{"healthy":true}}
 ```
+
+NOTE: TBD - notes on configuring the endpoint.

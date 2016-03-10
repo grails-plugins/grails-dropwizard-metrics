@@ -9,12 +9,12 @@ import spock.lang.Specification
 class MeteredControllerActionSpec extends Specification {
 
     static doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     void 'test the @Metered annotation'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
 
         when:
         controller.someAction()

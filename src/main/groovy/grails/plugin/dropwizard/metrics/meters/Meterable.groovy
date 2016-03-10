@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 trait Meterable {
 
     private MetricRegistry retrieveMetricRegistry() {
-        Holders.applicationContext.getBean('dropwizardMetricsRegistry', MetricRegistry)
+        Holders.applicationContext.getBean('metricRegistry', MetricRegistry)
     }
 
     private Meter retrieveMeter(String name) {

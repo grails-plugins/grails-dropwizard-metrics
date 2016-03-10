@@ -11,12 +11,12 @@ import spock.lang.Specification
 class MeteredAnnotationSpec extends Specification {
 
     static doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     void 'test the @Metered annotation'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeOtherClass()
 
         when:
@@ -30,7 +30,7 @@ class MeteredAnnotationSpec extends Specification {
 
     void 'test the @Metered annotation with useClassPrefix set to true'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeOtherClass()
 
         when:
@@ -44,7 +44,7 @@ class MeteredAnnotationSpec extends Specification {
 
     void 'test the @Metered annotation with useClassPrefix set to false'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeOtherClass()
 
         when:

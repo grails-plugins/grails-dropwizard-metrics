@@ -11,12 +11,12 @@ import spock.lang.Specification
 class TimedAnnotationSpec extends Specification {
 
     static doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     void 'test the @Timed annotation'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeTimedClass()
 
         when:
@@ -30,7 +30,7 @@ class TimedAnnotationSpec extends Specification {
 
     void 'test the @Timed annotation with class prefix set to true'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeTimedClass()
 
         when:
@@ -44,7 +44,7 @@ class TimedAnnotationSpec extends Specification {
 
     void 'test the @Timed annotation with class prefix set to false'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeTimedClass()
 
         when:

@@ -27,7 +27,7 @@ abstract class NamedMetricTransformation implements ASTTransformation {
 
     protected MethodCallExpression getMetricsRegistryExpression() {
         Expression getApplicationContextExpression = new StaticMethodCallExpression(ClassHelper.make(Holders), 'getApplicationContext', new ArgumentListExpression())
-        Expression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('dropwizardMetricsRegistry'))
+        Expression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('metricRegistry'))
         getBeanExpression
     }
 

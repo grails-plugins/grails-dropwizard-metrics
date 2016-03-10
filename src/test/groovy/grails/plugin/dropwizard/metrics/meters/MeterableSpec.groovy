@@ -11,12 +11,12 @@ import spock.lang.Specification
 class MeterableSpec extends Specification {
 
     static doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     void 'test markMeter method'() {
         setup:
-        def registry = applicationContext.dropwizardMetricsRegistry
+        def registry = applicationContext.metricRegistry
         def obj = new SomeClass()
 
         when:

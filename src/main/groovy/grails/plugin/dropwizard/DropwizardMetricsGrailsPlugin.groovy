@@ -15,22 +15,9 @@
  */
 package grails.plugin.dropwizard
 
-import com.codahale.metrics.JmxReporter
-import com.codahale.metrics.Metric
-import com.codahale.metrics.MetricRegistry
-import com.codahale.metrics.MetricSet
 import com.codahale.metrics.Slf4jReporter
-import com.codahale.metrics.health.HealthCheck
-import com.codahale.metrics.health.HealthCheckRegistry
-import com.codahale.metrics.health.jvm.ThreadDeadlockHealthCheck
-import com.codahale.metrics.jvm.GarbageCollectorMetricSet
-import com.codahale.metrics.jvm.MemoryUsageGaugeSet
-import com.codahale.metrics.jvm.ThreadStatesGaugeSet
-import com.codahale.metrics.servlets.HealthCheckServlet
-import com.codahale.metrics.servlets.MetricsServlet
 import grails.plugins.Plugin
 import groovy.util.logging.Slf4j
-import org.springframework.boot.context.embedded.ServletRegistrationBean
 
 import java.util.concurrent.TimeUnit
 
@@ -67,74 +54,14 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
     // Online location of the plugin's browseable source code.
     def scm = [ url: "https://github.com/grails-plugins/grails-dropwizard-metrics" ]
 
-    Closure doWithSpring() {
-        { ->
-            dropwizardHealthCheckRegistry(HealthCheckRegistry)
-
-            String healthCheckUri = config.getProperty('grails.dropwizard.health.uri', String, null)
-            if(healthCheckUri) {
-                dropwizardHealthCheckServlet(HealthCheckServlet, ref('dropwizardHealthCheckRegistry'))
-                dropwizardHealthCheckServletRegistryBean(ServletRegistrationBean, ref('dropwizardHealthCheckServlet'), healthCheckUri)
-            }
-
-            dropwizardMetricsRegistry MetricRegistry
-            String metricsUri = config.getProperty('grails.dropwizard.metrics.uri', String, null)
-            if(metricsUri) {
-                dropwizardMetricsServlet(MetricsServlet, ref('dropwizardMetricsRegistry'))
-                dropwizardMetricsServletRegistryBean(ServletRegistrationBean, ref('dropwizardMetricsServlet'), metricsUri)
-            }
-
-            dropwizardGarbageCollectorMetricSet GarbageCollectorMetricSet
-            dropwizardMemoryUsageGaugeSet MemoryUsageGaugeSet
-            dropwizardThreadStatesGaugeSet ThreadStatesGaugeSet
-            dropwizardThreadDeadlockHealthCheck ThreadDeadlockHealthCheck
-        }
-    }
-
     @Override
     void doWithApplicationContext() {
-        def metricSetBeans = applicationContext.getBeansOfType(MetricSet)
-        def registry = applicationContext.dropwizardMetricsRegistry
-
-        if(config.getProperty('grails.dropwizard.jmx.enabled', Boolean, false)) {
-            final JmxReporter reporter = JmxReporter.forRegistry(registry).build()
-            reporter.start()
-        }
-
-        if (metricSetBeans) {
-            for (Map.Entry entry : metricSetBeans) {
-                MetricSet set = entry.value
-                if (!(set instanceof MetricRegistry)) {
-                    String beanName = entry.key
-                    registerMetrics beanName, set, registry
-                }
-            }
-        }
-        def healthCheckBeans = applicationContext.getBeansOfType(HealthCheck)
-        if(healthCheckBeans) {
-            def healthRegistry = applicationContext.dropwizardHealthCheckRegistry
-            for(Map.Entry entry : healthCheckBeans) {
-                HealthCheck check = entry.value
-                String beanName = entry.key
-                healthRegistry.register beanName, check
-            }
-        }
         def logReporterFequency = config.getProperty('grails.dropwizard.metrics.reporterFrequency', Integer, 0)
         if(logReporterFequency > 0) {
-            Slf4jReporter logbackReporter = Slf4jReporter.forRegistry(registry).outputTo(log)
+            Slf4jReporter logbackReporter = Slf4jReporter.forRegistry(applicationContext.metricRegistry).outputTo(log)
                     .convertRatesTo(TimeUnit.SECONDS)
                     .convertDurationsTo(TimeUnit.MILLISECONDS).build()
             logbackReporter.start logReporterFequency, TimeUnit.SECONDS
-        }
-    }
-
-    protected void registerMetrics(String beanName, MetricSet metricSet, MetricRegistry registry) {
-        for (Map.Entry<String, Metric> entry : metricSet.metrics.entrySet()) {
-            if (entry.value instanceof MetricSet) {
-                registerMetrics(beanName, entry.value, registry)
-            } else {
-                registry.register "grails.dropwizard.${beanName}.${entry.key}", entry.value
-            }
         }
     }
 }
