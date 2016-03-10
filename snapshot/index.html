@@ -525,11 +525,10 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_metrics">3. Metrics</a>
 <ul class="sectlevel2">
 <li><a href="#_metricregistry_beans">3.1. MetricRegistry Beans</a></li>
-<li><a href="#_default_metricregistry_beans">3.2. Default MetricRegistry Beans</a></li>
-<li><a href="#_marking_meters">3.3. Marking Meters</a></li>
-<li><a href="#_timers">3.4. Timers</a></li>
-<li><a href="#_unit_testing">3.5. Unit Testing</a></li>
-<li><a href="#_exposing_metrics_data">3.6. Exposing Metrics Data</a></li>
+<li><a href="#_marking_meters">3.2. Marking Meters</a></li>
+<li><a href="#_timers">3.3. Timers</a></li>
+<li><a href="#_unit_testing">3.4. Unit Testing</a></li>
+<li><a href="#_exposing_metrics_data">3.5. Exposing Metrics Data</a></li>
 </ul>
 </li>
 <li><a href="#_health_checks">4. Health Checks</a>
@@ -578,39 +577,7 @@ any number of <code>MetricRegistry</code> beans.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_default_metricregistry_beans">3.2. Default MetricRegistry Beans</h3>
-<div class="paragraph">
-<p>The plugin automatically adds the following <code>MetricRegistry</code> beans to the Spring application context.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Bean Name</th>
-<th class="tableblock halign-left valign-top">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropwizardGarbageCollectorMetricSet</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/jvm/GarbageCollectorMetricSet.html">com.codahale.metrics.jvm.GarbageCollectorMetricSet</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropwizardMemoryUsageGaugeSet</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/jvm/MemoryUsageGaugeSet.html">com.codahale.metrics.jvm.MemoryUsageGaugeSet</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dropwizardThreadStatesGaugeSet</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://dropwizard.github.io/metrics/3.1.0/apidocs/com/codahale/metrics/jvm/ThreadStatesGaugeSet.html">com.codahale.metrics.jvm.ThreadStatesGaugeSet</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_marking_meters">3.3. Marking Meters</h3>
+<h3 id="_marking_meters">3.2. Marking Meters</h3>
 <div class="quoteblock">
 <blockquote>
 A meter measures the rate of events over time (e.g., “requests per second”). In addition to the mean rate, meters also
@@ -666,7 +633,7 @@ of the associated meter to be prefixed with the fully qualified name of the clas
 </div>
 </div>
 <div class="sect2">
-<h3 id="_timers">3.4. Timers</h3>
+<h3 id="_timers">3.3. Timers</h3>
 <div class="quoteblock">
 <blockquote>
 A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
@@ -707,9 +674,9 @@ of the associated timer to be prefixed with the fully qualified name of the clas
 </div>
 </div>
 <div class="sect2">
-<h3 id="_unit_testing">3.5. Unit Testing</h3>
+<h3 id="_unit_testing">3.4. Unit Testing</h3>
 <div class="paragraph">
-<p>When unit testing code which uses any of the plugin&#8217;s code generation techniques (<code>@Timed</code>, <code>@Metered</code>, etc&#8230;&#8203;) a bean named <code>dropwizardMetricsRegistry</code> will
+<p>When unit testing code which uses any of the plugin&#8217;s code generation techniques (<code>@Timed</code>, <code>@Metered</code>, etc&#8230;&#8203;) a bean named <code>metricsRegistry</code> will
 need to be registed in the Spring application context.  Below are examples of how to do that.</p>
 </div>
 <div class="listingblock">
@@ -723,12 +690,12 @@ need to be registed in the Spring application context.  Below are examples of ho
 <span class="type">class</span> <span class="class">MeterableSpec</span> <span class="directive">extends</span> Specification {
 
     <span class="directive">static</span> doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test markMeter method</span><span class="delimiter">'</span></span>() {
         <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.dropwizardMetricsRegistry
+        <span class="keyword">def</span> registry = applicationContext.metricRegistry
         <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeClass()
 
         <span class="key">when</span>:
@@ -762,12 +729,12 @@ need to be registed in the Spring application context.  Below are examples of ho
 <span class="type">class</span> <span class="class">MeteredAnnotationSpec</span> <span class="directive">extends</span> Specification {
 
     <span class="directive">static</span> doWithSpring = {
-        dropwizardMetricsRegistry MetricRegistry
+        metricRegistry MetricRegistry
     }
 
     <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation</span><span class="delimiter">'</span></span>() {
         <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.dropwizardMetricsRegistry
+        <span class="keyword">def</span> registry = applicationContext.metricRegistry
         <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeOtherClass()
 
         <span class="key">when</span>:
@@ -781,7 +748,7 @@ need to be registed in the Spring application context.  Below are examples of ho
 
     <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation with useClassPrefix set to true</span><span class="delimiter">'</span></span>() {
         <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.dropwizardMetricsRegistry
+        <span class="keyword">def</span> registry = applicationContext.metricRegistry
         <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeOtherClass()
 
         <span class="key">when</span>:
@@ -795,7 +762,7 @@ need to be registed in the Spring application context.  Below are examples of ho
 
     <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation with useClassPrefix set to false</span><span class="delimiter">'</span></span>() {
         <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.dropwizardMetricsRegistry
+        <span class="keyword">def</span> registry = applicationContext.metricRegistry
         <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeOtherClass()
 
         <span class="key">when</span>:
@@ -827,29 +794,28 @@ need to be registed in the Spring application context.  Below are examples of ho
 </div>
 </div>
 <div class="sect2">
-<h3 id="_exposing_metrics_data">3.6. Exposing Metrics Data</h3>
+<h3 id="_exposing_metrics_data">3.5. Exposing Metrics Data</h3>
 <div class="paragraph">
-<p>The plugin supports exposing access to metrics data through a URI in the web application.  To enable
-exposing the data assign a value to the <code>grails.dropwizard.metrics.uri</code> property to indicate where the
-data should be made available.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>---
-grails:
-    dropwizard:
-        metrics:
-            uri: /checkMetrics</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>With that configuration in place a request to <code>/checkMetrics</code> will be responded to with JSON provided by all
+<p>The plugin supports exposing access to metrics data through a URI in the web application.  By default metrics are
+available at <code>/metrics</code>.  A request to <code>/metrics</code> will be responded to with JSON provided by all
  of the <code>MetricRegistry</code> instances that are active in the application as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>{"version":"3.0.0","gauges":{"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-MarkSweep.count":{"value":0},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-MarkSweep.time":{"value":0},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-Scavenge.count":{"value":9},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-Scavenge.time":{"value":468},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.committed":{"value":738197504},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.init":{"value":268435456},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.max":{"value":3817865216},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.usage":{"value":0.14876779767387158},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.used":{"value":567975400},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.committed":{"value":64880640},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.init":{"value":24576000},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.max":{"value":136314880},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.usage":{"value":0.47363680326021634},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.used":{"value":64563744},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.committed":{"value":6160384},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.init":{"value":2555904},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.max":{"value":50331648},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.usage":{"value":0.11999003092447917},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.used":{"value":6039296},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.committed":{"value":525336576},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.init":{"value":67633152},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.max":{"value":1354760192},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.usage":{"value":0.3691370819375242},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.used":{"value":500092224},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.committed":{"value":178782208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.init":{"value":178782208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.max":{"value":2863136768},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.usage":{"value":0.011815351742218974},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.used":{"value":33828968},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.committed":{"value":58720256},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.init":{"value":22020096},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.max":{"value":85983232},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.usage":{"value":0.6806495480421113},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.used":{"value":58524448},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.committed":{"value":34078720},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.init":{"value":11010048},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.max":{"value":34078720},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.usage":{"value":0.9992807241586539},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.used":{"value":34054208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.committed":{"value":803078144},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.init":{"value":293011456},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.max":{"value":3954180096},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.used":{"value":632539312},"grails.dropwizard.dropwizardThreadStatesGaugeSet.blocked.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.count":{"value":23},"grails.dropwizard.dropwizardThreadStatesGaugeSet.daemon.count":{"value":20},"grails.dropwizard.dropwizardThreadStatesGaugeSet.deadlock.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.deadlocks":{"value":[]},"grails.dropwizard.dropwizardThreadStatesGaugeSet.new.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.runnable.count":{"value":9},"grails.dropwizard.dropwizardThreadStatesGaugeSet.terminated.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.timed_waiting.count":{"value":9},"grails.dropwizard.dropwizardThreadStatesGaugeSet.waiting.count":{"value":5}},"counters":{},"histograms":{},"meters":{},"timers":{}}</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+TBD - notes on configuring the endpoint.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Metrics may also be exposed as JMX MBeans.  To enable JMX support assign the value <code>true</code> to the
@@ -908,25 +874,25 @@ any number of <code>HealthCheck</code> beans.</p>
 <div class="paragraph">
 <p>The plugin supports exposing access to health check data through a URI in the web application.  To enable
 exposing the data assign a value to the <code>grails.dropwizard.health.uri</code> property to indicate where the
-data should be made available.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>---
-grails:
-    dropwizard:
-        health:
-            uri: /checkHealth</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>With that configuration in place a request to <code>/checkHealth</code> will be responded to with JSON provided by all
+data should be made available.  A request to <code>/health</code> will be responded to with JSON provided by all
  of the <code>HealthCheck</code> instances that are active in the application as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>{"dropwizardThreadDeadlockHealthCheck":{"healthy":true}}</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+TBD - notes on configuring the endpoint.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -972,7 +938,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 06:42:46 UTC
+Last updated 2016-03-10 14:48:53 UTC
 </div>
 </div>
 </body>

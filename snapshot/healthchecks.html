@@ -468,19 +468,7 @@ any number of <code>HealthCheck</code> beans.</p>
 <div class="paragraph">
 <p>The plugin supports exposing access to health check data through a URI in the web application.  To enable
 exposing the data assign a value to the <code>grails.dropwizard.health.uri</code> property to indicate where the
-data should be made available.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>---
-grails:
-    dropwizard:
-        health:
-            uri: /checkHealth</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>With that configuration in place a request to <code>/checkHealth</code> will be responded to with JSON provided by all
+data should be made available.  A request to <code>/health</code> will be responded to with JSON provided by all
  of the <code>HealthCheck</code> instances that are active in the application as shown below.</p>
 </div>
 <div class="listingblock">
@@ -488,11 +476,23 @@ grails:
 <pre class="highlight"><code>{"dropwizardThreadDeadlockHealthCheck":{"healthy":true}}</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+TBD - notes on configuring the endpoint.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 06:42:46 UTC
+Last updated 2016-03-10 14:48:53 UTC
 </div>
 </div>
 </body>
