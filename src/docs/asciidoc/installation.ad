@@ -1,10 +1,5 @@
 To add the Dropwizard Metrics plugin to an application add the following dependency to the dependencies block of your build.gradle:
 
 [source,groovy,subs="attributes"]
-----
 compile "org.grails.plugins:dropwizard-metrics:{version}"
-
-// the need to add the following will be removed before release
-compile "io.dropwizard.metrics:metrics-core"
-----
 
