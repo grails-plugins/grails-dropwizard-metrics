@@ -86,7 +86,7 @@ asciidoctor {
             'version'       : project.version
 }
 
-groovydoc.docTitle = 'Grails Dropwizard Metrics'
+groovydoc.docTitle = "Grails Dropwizard Metrics ${project.version}"
 groovydoc.destinationDir = new File(buildDir, 'docs/api')
 
 asciidoctor.outputDir = new File(buildDir, 'docs')
