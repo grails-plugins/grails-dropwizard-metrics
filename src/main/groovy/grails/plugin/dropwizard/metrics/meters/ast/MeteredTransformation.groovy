@@ -19,7 +19,6 @@ import grails.plugin.dropwizard.metrics.NamedMetricTransformation
 import grails.plugin.dropwizard.metrics.meters.Meterable
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.AnnotationNode
-import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.Expression
