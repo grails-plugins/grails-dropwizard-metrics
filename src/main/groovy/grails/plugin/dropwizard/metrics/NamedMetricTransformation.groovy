@@ -1,17 +1,19 @@
 package grails.plugin.dropwizard.metrics
 
 import com.codahale.metrics.MetricRegistry
+import grails.plugin.dropwizard.ast.MetricRegistryAware
+import groovy.transform.CompilationUnitAware
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
+import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
-import org.springframework.beans.factory.annotation.Autowired
-
-import java.lang.reflect.Modifier
 
 @CompileStatic
-abstract class NamedMetricTransformation implements ASTTransformation {
+abstract class NamedMetricTransformation implements ASTTransformation, CompilationUnitAware {
+
+    CompilationUnit compilationUnit
 
     @Override
     void visit(final ASTNode[] nodes, final SourceUnit source) {
@@ -20,7 +22,7 @@ abstract class NamedMetricTransformation implements ASTTransformation {
 
         final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode)
 
-        addAutowiredPropertyToClass(methodNode.declaringClass, MetricRegistry, 'metricRegistry')
+        implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
 
         decorateMethodWithMetrics(new VariableExpression('metricRegistry'), metricNameExpression, methodNode)
     }
@@ -42,14 +44,12 @@ abstract class NamedMetricTransformation implements ASTTransformation {
         metricNameExpression
     }
 
-    protected addAutowiredPropertyToClass(ClassNode classNode, Class propertyType, String propertyName) {
-        if (!classNode.hasProperty(propertyName)) {
-            FieldNode metricsRegistryFieldNode = new FieldNode(propertyName, Modifier.PRIVATE, ClassHelper.make(propertyType), classNode, new EmptyExpression())
-            AnnotationNode autowiredAnnotationNode = new AnnotationNode(ClassHelper.make(Autowired))
-            autowiredAnnotationNode.setMember('required', new ConstantExpression(false))
-            metricsRegistryFieldNode.addAnnotation(autowiredAnnotationNode)
-            PropertyNode metricsRegistryPropertyNode = new PropertyNode(metricsRegistryFieldNode, Modifier.PUBLIC, null, null)
-            classNode.addProperty(metricsRegistryPropertyNode)
+    protected implementMetricRegistryAware(CompilationUnit unit, SourceUnit source, ClassNode classNode) {
+        def metricRegistryAwareClassNode = ClassHelper.make(MetricRegistryAware)
+        boolean implementsTrait = classNode.declaresInterface(metricRegistryAwareClassNode)
+        if(!implementsTrait) {
+            classNode.addInterface(metricRegistryAwareClassNode)
+            org.codehaus.groovy.transform.trait.TraitComposer.doExtendTraits(classNode, source, unit)
         }
     }
 

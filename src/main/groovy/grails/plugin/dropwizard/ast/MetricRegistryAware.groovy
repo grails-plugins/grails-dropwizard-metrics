@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.dropwizard.metrics.meters
+package grails.plugin.dropwizard.ast
 
-import com.codahale.metrics.Meter
-import grails.plugin.dropwizard.ast.MetricRegistryAware
+import com.codahale.metrics.MetricRegistry
 import groovy.transform.CompileStatic
+import org.springframework.beans.factory.annotation.Autowired
 
+/**
+ * Implementing this trait adds a MetricRegistry property named
+ * metricRegistry that is marked with @Autowired to the implementing class.
+ */
 @CompileStatic
-trait Meterable implements MetricRegistryAware {
-
-    private Meter retrieveMeter(String name) {
-        metricRegistry.meter(name)
-    }
-
-    void markMeter(String name) {
-        retrieveMeter(name).mark()
-    }
+trait MetricRegistryAware {
+    @Autowired MetricRegistry metricRegistry
 }
