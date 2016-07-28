@@ -555,12 +555,13 @@ class MeterableSpec extends Specification {
 
     static doWithSpring = {
         metricRegistry MetricRegistry
+        someBean SomeClass
     }
 
     void 'test markMeter method'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeClass()
+        def obj = applicationContext.someBean
 
         when:
         obj.someAction()
@@ -699,7 +700,7 @@ grails:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-07-28 20:32:28 UTC
+Last updated 2016-07-28 20:53:44 UTC
 </div>
 </div>
 </body>

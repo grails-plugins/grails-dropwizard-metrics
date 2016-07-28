@@ -691,12 +691,13 @@ need to be registed in the Spring application context.  Below are examples of ho
 
     <span class="directive">static</span> doWithSpring = {
         metricRegistry MetricRegistry
+        someBean SomeClass
     }
 
     <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test markMeter method</span><span class="delimiter">'</span></span>() {
         <span class="key">setup</span>:
         <span class="keyword">def</span> registry = applicationContext.metricRegistry
-        <span class="keyword">def</span> obj = <span class="keyword">new</span> SomeClass()
+        <span class="keyword">def</span> obj = applicationContext.someBean
 
         <span class="key">when</span>:
         obj.someAction()
@@ -914,7 +915,7 @@ as shown below.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-07-28 20:32:28 UTC
+Last updated 2016-07-28 20:53:44 UTC
 </div>
 </div>
 </body>
