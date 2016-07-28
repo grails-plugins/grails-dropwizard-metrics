@@ -40,7 +40,7 @@ class MeteredTransformation extends NamedMetricTransformation {
                                     final MethodNode methodNode,
                                     final SourceUnit source,
                                     final Expression nameExpression) {
-        implementTrait(methodNode.declaringClass, ClassHelper.make(Meterable), source)
+        implementTrait(methodNode.declaringClass, Meterable, source)
         final ArgumentListExpression markMeterArgs = new ArgumentListExpression()
         markMeterArgs.addExpression(nameExpression)
         final Expression markExpression = new MethodCallExpression(new VariableExpression('this'), 'markMeter', markMeterArgs)

@@ -45,11 +45,11 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
     }
 
     protected implementMetricRegistryAware(CompilationUnit unit, SourceUnit source, ClassNode classNode) {
-        def metricRegistryAwareClassNode = ClassHelper.make(MetricRegistryAware)
-        implementTrait(classNode, metricRegistryAwareClassNode, source)
+        implementTrait(classNode, MetricRegistryAware, source)
     }
 
-    protected void implementTrait(ClassNode classNode, ClassNode traitClassNode, SourceUnit source) {
+    protected void implementTrait(ClassNode classNode, Class traitClass, SourceUnit source) {
+        final ClassNode traitClassNode = ClassHelper.make(traitClass)
         boolean implementsTrait = classNode.declaresInterface(traitClassNode)
         if (!implementsTrait) {
             classNode.addInterface(traitClassNode)
