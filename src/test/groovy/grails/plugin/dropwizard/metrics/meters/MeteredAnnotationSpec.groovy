@@ -12,12 +12,13 @@ class MeteredAnnotationSpec extends Specification {
 
     static doWithSpring = {
         metricRegistry MetricRegistry
+        someMeteredBean SomeOtherClass
     }
 
     void 'test the @Metered annotation'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.someAction()
@@ -31,7 +32,7 @@ class MeteredAnnotationSpec extends Specification {
     void 'test the @Metered annotation with useClassPrefix set to true'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.someOtherAction()
@@ -45,7 +46,7 @@ class MeteredAnnotationSpec extends Specification {
     void 'test the @Metered annotation with useClassPrefix set to false'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.yetAnotherAction()

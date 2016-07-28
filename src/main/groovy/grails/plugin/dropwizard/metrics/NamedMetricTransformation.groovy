@@ -1,18 +1,18 @@
 package grails.plugin.dropwizard.metrics
 
 import com.codahale.metrics.MetricRegistry
-import grails.util.Holders
 import groovy.transform.CompileStatic
-import org.codehaus.groovy.ast.ASTNode
-import org.codehaus.groovy.ast.AnnotationNode
-import org.codehaus.groovy.ast.ClassHelper
-import org.codehaus.groovy.ast.MethodNode
+import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
 import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.ASTTransformation
+import org.springframework.beans.factory.annotation.Autowired
+
+import java.lang.reflect.Modifier
 
 @CompileStatic
 abstract class NamedMetricTransformation implements ASTTransformation {
+
     @Override
     void visit(final ASTNode[] nodes, final SourceUnit source) {
         final AnnotationNode annotationNode = (AnnotationNode)nodes[0]
@@ -20,15 +20,9 @@ abstract class NamedMetricTransformation implements ASTTransformation {
 
         final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode)
 
-        final MethodCallExpression getBeanExpression = getMetricsRegistryExpression()
+        addAutowiredPropertyToClass(methodNode.declaringClass, MetricRegistry, 'metricRegistry')
 
-        decorateMethodWithMetrics(getBeanExpression, metricNameExpression, methodNode)
-    }
-
-    protected MethodCallExpression getMetricsRegistryExpression() {
-        Expression getApplicationContextExpression = new StaticMethodCallExpression(ClassHelper.make(Holders), 'getApplicationContext', new ArgumentListExpression())
-        Expression getBeanExpression = new MethodCallExpression(getApplicationContextExpression, 'getBean', new ConstantExpression('metricRegistry'))
-        getBeanExpression
+        decorateMethodWithMetrics(new VariableExpression('metricRegistry'), metricNameExpression, methodNode)
     }
 
     protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode) {
@@ -48,6 +42,17 @@ abstract class NamedMetricTransformation implements ASTTransformation {
         metricNameExpression
     }
 
-    abstract protected void decorateMethodWithMetrics(MethodCallExpression metricsRegistryExpression, Expression metricNameExpression, MethodNode methodNode)
+    protected addAutowiredPropertyToClass(ClassNode classNode, Class propertyType, String propertyName) {
+        if (!classNode.hasProperty(propertyName)) {
+            FieldNode metricsRegistryFieldNode = new FieldNode(propertyName, Modifier.PRIVATE, ClassHelper.make(propertyType), classNode, new EmptyExpression())
+            AnnotationNode autowiredAnnotationNode = new AnnotationNode(ClassHelper.make(Autowired))
+            autowiredAnnotationNode.setMember('required', new ConstantExpression(false))
+            metricsRegistryFieldNode.addAnnotation(autowiredAnnotationNode)
+            PropertyNode metricsRegistryPropertyNode = new PropertyNode(metricsRegistryFieldNode, Modifier.PUBLIC, null, null)
+            classNode.addProperty(metricsRegistryPropertyNode)
+        }
+    }
+
+    abstract protected void decorateMethodWithMetrics(Expression metricsRegistryExpression, Expression metricNameExpression, MethodNode methodNode)
 
 }

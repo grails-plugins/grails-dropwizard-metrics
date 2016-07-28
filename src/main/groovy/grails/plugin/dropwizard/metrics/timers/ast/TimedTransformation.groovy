@@ -33,7 +33,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 @CompileStatic
 class TimedTransformation extends NamedMetricTransformation {
 
-    protected void decorateMethodWithMetrics(final MethodCallExpression metricsRegistryExpression,
+    protected void decorateMethodWithMetrics(final Expression metricsRegistryExpression,
                                              final Expression timerNameExpression,
                                              final MethodNode methodNode) {
         final Expression timerExpression = new MethodCallExpression(metricsRegistryExpression, 'timer', timerNameExpression)

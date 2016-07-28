@@ -12,12 +12,13 @@ class TimedAnnotationSpec extends Specification {
 
     static doWithSpring = {
         metricRegistry MetricRegistry
+        someTimedBean SomeTimedClass
     }
 
     void 'test the @Timed annotation'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeTimedClass()
+        def obj = applicationContext.someTimedBean
 
         when:
         obj.someAction()
@@ -31,7 +32,7 @@ class TimedAnnotationSpec extends Specification {
     void 'test the @Timed annotation with class prefix set to true'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeTimedClass()
+        def obj = applicationContext.someTimedBean
 
         when:
         obj.someOtherAction()
@@ -45,7 +46,7 @@ class TimedAnnotationSpec extends Specification {
     void 'test the @Timed annotation with class prefix set to false'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeTimedClass()
+        def obj = applicationContext.someTimedBean
 
         when:
         obj.yetAnotherAction()

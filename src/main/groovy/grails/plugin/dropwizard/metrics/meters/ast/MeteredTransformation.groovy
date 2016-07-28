@@ -31,7 +31,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 class MeteredTransformation extends NamedMetricTransformation {
 
     @Override
-    protected void decorateMethodWithMetrics(final MethodCallExpression metricsRegistryExpression,
+    protected void decorateMethodWithMetrics(final Expression metricsRegistryExpression,
                                              final Expression meterNameExpression,
                                              final MethodNode methodNode) {
         final Expression meterExpression = new MethodCallExpression(metricsRegistryExpression, 'meter', meterNameExpression)
