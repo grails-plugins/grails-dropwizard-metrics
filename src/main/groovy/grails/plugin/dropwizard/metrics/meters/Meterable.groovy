@@ -17,18 +17,16 @@ package grails.plugin.dropwizard.metrics.meters
 
 import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
-import grails.util.Holders
 import groovy.transform.CompileStatic
+import org.springframework.beans.factory.annotation.Autowired
 
 @CompileStatic
 trait Meterable {
 
-    private MetricRegistry retrieveMetricRegistry() {
-        Holders.applicationContext.getBean('metricRegistry', MetricRegistry)
-    }
+    @Autowired MetricRegistry metricRegistry
 
     private Meter retrieveMeter(String name) {
-        retrieveMetricRegistry().meter(name)
+        metricRegistry.meter(name)
     }
 
     void markMeter(String name) {

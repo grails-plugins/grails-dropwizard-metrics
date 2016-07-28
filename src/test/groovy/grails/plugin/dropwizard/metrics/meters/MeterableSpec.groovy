@@ -12,12 +12,13 @@ class MeterableSpec extends Specification {
 
     static doWithSpring = {
         metricRegistry MetricRegistry
+        someBean SomeClass
     }
 
     void 'test markMeter method'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeClass()
+        def obj = applicationContext.someBean
 
         when:
         obj.someAction()
