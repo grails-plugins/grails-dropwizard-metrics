@@ -594,12 +594,13 @@ class MeteredAnnotationSpec extends Specification {
 
     static doWithSpring = {
         metricRegistry MetricRegistry
+        someMeteredBean SomeOtherClass
     }
 
     void 'test the @Metered annotation'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.someAction()
@@ -613,7 +614,7 @@ class MeteredAnnotationSpec extends Specification {
     void 'test the @Metered annotation with useClassPrefix set to true'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.someOtherAction()
@@ -627,7 +628,7 @@ class MeteredAnnotationSpec extends Specification {
     void 'test the @Metered annotation with useClassPrefix set to false'() {
         setup:
         def registry = applicationContext.metricRegistry
-        def obj = new SomeOtherClass()
+        def obj = applicationContext.someMeteredBean
 
         when:
         obj.yetAnotherAction()
@@ -698,7 +699,7 @@ grails:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-10 20:02:29 UTC
+Last updated 2016-07-28 20:32:28 UTC
 </div>
 </div>
 </body>
