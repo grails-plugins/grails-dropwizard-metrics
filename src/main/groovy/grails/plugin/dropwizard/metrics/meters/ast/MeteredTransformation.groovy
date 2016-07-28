@@ -16,14 +16,19 @@
 package grails.plugin.dropwizard.metrics.meters.ast
 
 import grails.plugin.dropwizard.metrics.NamedMetricTransformation
+import grails.plugin.dropwizard.metrics.meters.Meterable
 import groovy.transform.CompileStatic
+import org.codehaus.groovy.ast.AnnotationNode
+import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
+import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.transform.GroovyASTTransformation
 
 @GroovyASTTransformation
@@ -31,12 +36,14 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 class MeteredTransformation extends NamedMetricTransformation {
 
     @Override
-    protected void decorateMethodWithMetrics(final Expression metricsRegistryExpression,
-                                             final Expression meterNameExpression,
-                                             final MethodNode methodNode) {
-        final Expression meterExpression = new MethodCallExpression(metricsRegistryExpression, 'meter', meterNameExpression)
-        final Expression markExpression = new MethodCallExpression(meterExpression, 'mark', new ArgumentListExpression())
-
+    protected void doTransformation(final AnnotationNode annotationNode,
+                                    final MethodNode methodNode,
+                                    final SourceUnit source,
+                                    final Expression nameExpression) {
+        implementTrait(methodNode.declaringClass, ClassHelper.make(Meterable), source)
+        final ArgumentListExpression markMeterArgs = new ArgumentListExpression()
+        markMeterArgs.addExpression(nameExpression)
+        final Expression markExpression = new MethodCallExpression(new VariableExpression('this'), 'markMeter', markMeterArgs)
         final BlockStatement newCode = new BlockStatement()
 
         newCode.addStatement(new ExpressionStatement(markExpression))
@@ -45,6 +52,5 @@ class MeteredTransformation extends NamedMetricTransformation {
         newCode.addStatement(originalMethodCode)
 
         methodNode.code = newCode
-
     }
 }

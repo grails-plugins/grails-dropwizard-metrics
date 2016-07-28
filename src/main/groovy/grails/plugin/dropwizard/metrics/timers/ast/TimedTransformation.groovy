@@ -18,6 +18,7 @@ package grails.plugin.dropwizard.metrics.timers.ast
 import com.codahale.metrics.Timer
 import grails.plugin.dropwizard.metrics.NamedMetricTransformation
 import groovy.transform.CompileStatic
+import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.*
@@ -25,6 +26,7 @@ import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.ast.stmt.TryCatchStatement
+import org.codehaus.groovy.control.SourceUnit
 import org.codehaus.groovy.syntax.Token
 import org.codehaus.groovy.syntax.Types
 import org.codehaus.groovy.transform.GroovyASTTransformation
@@ -33,10 +35,12 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
 @CompileStatic
 class TimedTransformation extends NamedMetricTransformation {
 
-    protected void decorateMethodWithMetrics(final Expression metricsRegistryExpression,
-                                             final Expression timerNameExpression,
-                                             final MethodNode methodNode) {
-        final Expression timerExpression = new MethodCallExpression(metricsRegistryExpression, 'timer', timerNameExpression)
+    @Override
+    protected void doTransformation(final AnnotationNode annotationNode,
+                                    final MethodNode methodNode,
+                                    final SourceUnit source,
+                                    final Expression nameExpression) {
+        final Expression timerExpression = new MethodCallExpression(new VariableExpression('metricRegistry'), 'timer', nameExpression)
 
         final Expression timeExpression = new MethodCallExpression(timerExpression, 'time', new ArgumentListExpression())
 

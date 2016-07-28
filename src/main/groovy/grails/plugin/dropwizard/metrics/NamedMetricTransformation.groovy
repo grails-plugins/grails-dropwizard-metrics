@@ -21,11 +21,11 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
         final MethodNode methodNode = (MethodNode)nodes[1]
 
         final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode)
-
         implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
-
-        decorateMethodWithMetrics(new VariableExpression('metricRegistry'), metricNameExpression, methodNode)
+        doTransformation(annotationNode, methodNode, source, metricNameExpression)
     }
+
+    abstract protected void doTransformation(AnnotationNode annotationNode, MethodNode methodNode, SourceUnit source, Expression metricNameExpression)
 
     protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode) {
         final String metricNameFromAnnotation = annotationNode.getMember('value').getText()
@@ -46,13 +46,14 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
 
     protected implementMetricRegistryAware(CompilationUnit unit, SourceUnit source, ClassNode classNode) {
         def metricRegistryAwareClassNode = ClassHelper.make(MetricRegistryAware)
-        boolean implementsTrait = classNode.declaresInterface(metricRegistryAwareClassNode)
-        if(!implementsTrait) {
-            classNode.addInterface(metricRegistryAwareClassNode)
-            org.codehaus.groovy.transform.trait.TraitComposer.doExtendTraits(classNode, source, unit)
-        }
+        implementTrait(classNode, metricRegistryAwareClassNode, source)
     }
 
-    abstract protected void decorateMethodWithMetrics(Expression metricsRegistryExpression, Expression metricNameExpression, MethodNode methodNode)
-
+    protected void implementTrait(ClassNode classNode, ClassNode traitClassNode, SourceUnit source) {
+        boolean implementsTrait = classNode.declaresInterface(traitClassNode)
+        if (!implementsTrait) {
+            classNode.addInterface(traitClassNode)
+            org.codehaus.groovy.transform.trait.TraitComposer.doExtendTraits(classNode, source, compilationUnit)
+        }
+    }
 }
