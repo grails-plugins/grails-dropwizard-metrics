@@ -1,4 +1,5 @@
 grails.plugin.dropwizard
+grails.plugin.dropwizard.ast
 grails.plugin.dropwizard.metrics
 grails.plugin.dropwizard.metrics.meters
 grails.plugin.dropwizard.metrics.meters.ast
