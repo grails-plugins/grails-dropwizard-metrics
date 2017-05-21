@@ -12,7 +12,7 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
-version "1.0.0.BUILD-SNAPSHOT"
+version "1.0.0.M1"
 group "org.grails.plugins"
 
 apply plugin:"org.grails.grails-plugin"
