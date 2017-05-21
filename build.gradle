@@ -1,7 +1,4 @@
 buildscript {
-    ext {
-        grailsVersion = project.grailsVersion
-    }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
@@ -12,63 +9,34 @@ buildscript {
 }
 
 plugins {
-    id "io.spring.dependency-management" version "0.5.4.RELEASE"
-    id "com.jfrog.bintray" version "1.2"
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
 version "1.0.0.BUILD-SNAPSHOT"
 group "org.grails.plugins"
 
-apply plugin: 'maven-publish'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: "spring-boot"
-apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-gsp"
-// Used for publishing to central repository, remove if not needed
-apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
-
-ext {
-    grailsVersion = project.grailsVersion
-    gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+apply plugin:"org.grails.grails-plugin"
+apply plugin:"org.grails.grails-plugin-publish"
 
 repositories {
     mavenLocal()
-    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.grails:grails-bom:$grailsVersion"
-    }
-    applyMavenExclusions false
-}
-
 dependencies {
-    provided 'org.springframework.boot:spring-boot-starter-logging'
-    provided "org.springframework.boot:spring-boot-starter-actuator"
-    provided "org.springframework.boot:spring-boot-autoconfigure"
-    provided "org.springframework.boot:spring-boot-starter-tomcat"
-
-    provided "org.grails:grails-web-boot"
-    provided "org.grails:grails-dependencies"
-    provided 'javax.servlet:javax.servlet-api:3.1.0'
-
-    testCompile "org.grails:grails-plugin-testing"
-
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-autoconfigure"
+    compile "org.grails:grails-core"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.grails:grails-dependencies"
+    compile "org.grails:grails-web-boot"
+    compile "org.grails.plugins:cache"
+    compile "org.grails.plugins:scaffolding"
     console "org.grails:grails-console"
     compile 'io.dropwizard.metrics:metrics-core:3.1.2'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
+    profile "org.grails.profiles:web-plugin"
+    testCompile "org.grails:grails-plugin-testing"
 }
 
 asciidoctor {
@@ -77,6 +45,19 @@ asciidoctor {
             'toc'           : 'left',
             'icons'         : 'font',
             'version'       : project.version
+}
+
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+grailsPublish {
+    userOrg = 'grails'
+    githubSlug = 'grails-plugins/grails-dropwizard-metrics'
+    license {
+        name = 'Apache-2.0'
+    }
+    title = 'Grails Dropwizard Metrics'
+    desc = 'Monitoring And Metrics Plugin For Grails 3'
+    developers = [jeffbrown: "Jeff Scott Brown"]
 }
 
 groovydoc.docTitle = "Grails Dropwizard Metrics ${project.version}"
