@@ -70,3 +70,17 @@ grails:
 endpoints:
     jmx:
         unique-names: true
+
+---
+grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 5     # Five seconds
+            console-reporter.active: false
+            csv-reporter:
+                active: false
+                output-dir: /tmp
+            graphite-reporter:
+                active: false
+                graphite-metric-prefix: rgare.com
+            slf4j-reporter.active: true
