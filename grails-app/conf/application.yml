@@ -82,5 +82,5 @@ grails:
                 output-dir: /tmp
             graphite-reporter:
                 active: false
-                graphite-metric-prefix: rgare.com
+                graphite-metric-prefix: example.com
             slf4j-reporter.active: true
