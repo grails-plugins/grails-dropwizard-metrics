@@ -15,11 +15,9 @@
  */
 package grails.plugin.dropwizard
 
-import com.codahale.metrics.Slf4jReporter
+import grails.plugin.dropwizard.reporters.ScheduledReporterFactory
 import grails.plugins.Plugin
 import groovy.util.logging.Slf4j
-
-import java.util.concurrent.TimeUnit
 
 @Slf4j
 class DropwizardMetricsGrailsPlugin extends Plugin {
@@ -46,22 +44,33 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
     def license = "APACHE"
 
     // Details of company behind the plugin (if there is one)
-    def organization = [ name: "OCI", url: "http://www.ociweb.com/" ]
+    def organization = [name: "OCI", url: "http://www.ociweb.com/"]
 
     // Location of the plugin's issue tracker.
-    def issueManagement = [ system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-dropwizard-metrics/issues" ]
+    def issueManagement = [system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-dropwizard-metrics/issues"]
 
     // Online location of the plugin's browseable source code.
-    def scm = [ url: "https://github.com/grails-plugins/grails-dropwizard-metrics" ]
+    def scm = [url: "https://github.com/grails-plugins/grails-dropwizard-metrics"]
 
     @Override
-    void doWithApplicationContext() {
-        def logReporterFequency = config.getProperty('grails.dropwizard.metrics.reporterFrequency', Integer, 0)
-        if(logReporterFequency > 0) {
-            Slf4jReporter logbackReporter = Slf4jReporter.forRegistry(applicationContext.metricRegistry).outputTo(log)
-                    .convertRatesTo(TimeUnit.SECONDS)
-                    .convertDurationsTo(TimeUnit.MILLISECONDS).build()
-            logbackReporter.start logReporterFequency, TimeUnit.SECONDS
+    Closure doWithSpring() { { ->
+
+        scheduledReporterFactory(ScheduledReporterFactory)
+
+        if(config.getProperty('grails.dropwizard.metrics.console-reporter.active', Boolean, false)) {
+            dropwizardConsoleReporter(scheduledReporterFactory: 'consoleReporter')
         }
-    }
+
+        if(config.getProperty('grails.dropwizard.metrics.slf4j-reporter.active', Boolean, true)) {
+            dropwizardSlf4jReporter(scheduledReporterFactory: 'slf4jReporter')
+        }
+
+        if(config.getProperty('grails.dropwizard.metrics.csv-reporter.active', Boolean, false)) {
+            dropwizardCsvReporter(scheduledReporterFactory: 'csvReporter')
+        }
+
+        if(config.getProperty('grails.dropwizard.metrics.graphite-reporter.active', Boolean, false)) {
+            dropwizardGraphiteReporter(scheduledReporterFactory: 'graphiteReporter')
+        }
+    } }
 }
