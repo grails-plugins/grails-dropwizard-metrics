@@ -44,7 +44,7 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
     def license = "APACHE"
 
     // Details of company behind the plugin (if there is one)
-    def organization = [name: "OCI", url: "http://www.ociweb.com/"]
+    def organization = [name: "OCI", url: "http://www.objectcomputing.com/"]
 
     // Location of the plugin's issue tracker.
     def issueManagement = [system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-dropwizard-metrics/issues"]
