@@ -12,7 +12,7 @@ plugins {
     id 'org.asciidoctor.convert' version '1.5.3'
 }
 
-version "1.0.0.M2"
+version "1.0.0.M3"
 group "org.grails.plugins"
 
 apply plugin:"org.grails.grails-plugin"
@@ -35,6 +35,7 @@ dependencies {
     compile "org.grails.plugins:scaffolding"
     console "org.grails:grails-console"
     compile 'io.dropwizard.metrics:metrics-core:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-graphite:3.1.2'
     profile "org.grails.profiles:web-plugin"
     testCompile "org.grails:grails-plugin-testing"
 }
