@@ -1,8 +1,9 @@
 package grails.plugin.dropwizard.reporters
 
-import com.codahale.metrics.*
-import com.codahale.metrics.graphite.Graphite
-import com.codahale.metrics.graphite.GraphiteReporter
+import com.codahale.metrics.ConsoleReporter
+import com.codahale.metrics.CsvReporter
+import com.codahale.metrics.MetricRegistry
+import com.codahale.metrics.Slf4jReporter
 import groovy.util.logging.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,18 +26,6 @@ class ScheduledReporterFactory {
 
     @Value('${grails.dropwizard.metrics.csv-reporter.output-dir:./}')
     String csvOutputDir
-
-    @Value('${grails.dropwizard.metrics.graphite-reporter.graphite-server:localhost}')
-    String graphiteServer
-
-    @Value('${grails.dropwizard.metrics.graphite-reporter.graphite-server-port:2003}')
-    Integer graphiteServerPort
-
-    @Value('${grails.dropwizard.metrics.graphite-reporter.graphite-metric-prefix:example.com}')
-    String graphiteMetricPrefix
-
-    @Value('${grails.dropwizard.metrics.graphite-reporter.metric-filter-bean:}')
-    String metricFilterBean
 
     ConsoleReporter consoleReporter() {
         ConsoleReporter consoleReporter = ConsoleReporter.forRegistry(metricRegistry)
@@ -79,20 +68,5 @@ class ScheduledReporterFactory {
         log.info 'slf4jReporter started'
 
         slf4jReporter
-    }
-
-    GraphiteReporter graphiteReporter() {
-        MetricFilter metricFilter = metricFilterBean ? applicationContext.getBean(metricFilterBean) as MetricFilter : MetricFilter.ALL
-        final Graphite graphite = new Graphite(new InetSocketAddress(graphiteServer, graphiteServerPort))
-        final GraphiteReporter graphiteReporter = GraphiteReporter.forRegistry(metricRegistry)
-                                                                  .convertRatesTo(TimeUnit.SECONDS)
-                                                                  .convertDurationsTo(TimeUnit.MILLISECONDS)
-                                                                  .prefixedWith(graphiteMetricPrefix)
-                                                                  .filter(metricFilter)
-                                                                  .build(graphite)
-        graphiteReporter.start reporterFrequency, TimeUnit.SECONDS
-        log.info 'graphiteReporter started'
-
-        graphiteReporter
     }
 }
