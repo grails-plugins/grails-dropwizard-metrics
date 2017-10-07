@@ -55,18 +55,20 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
     @Override
     Closure doWithSpring() { { ->
 
-        scheduledReporterFactory(ScheduledReporterFactory)
+        if(config.getProperty('grails.dropwizard.metrics.reporterFrequency', Integer, 0)) {
+            scheduledReporterFactory(ScheduledReporterFactory)
 
-        if(config.getProperty('grails.dropwizard.metrics.console-reporter.active', Boolean, false)) {
-            dropwizardConsoleReporter(scheduledReporterFactory: 'consoleReporter')
-        }
+            if (config.getProperty('grails.dropwizard.metrics.console-reporter.active', Boolean, false)) {
+                dropwizardConsoleReporter(scheduledReporterFactory: 'consoleReporter')
+            }
 
-        if(config.getProperty('grails.dropwizard.metrics.slf4j-reporter.active', Boolean, true)) {
-            dropwizardSlf4jReporter(scheduledReporterFactory: 'slf4jReporter')
-        }
+            if (config.getProperty('grails.dropwizard.metrics.slf4j-reporter.active', Boolean, true)) {
+                dropwizardSlf4jReporter(scheduledReporterFactory: 'slf4jReporter')
+            }
 
-        if(config.getProperty('grails.dropwizard.metrics.csv-reporter.active', Boolean, false)) {
-            dropwizardCsvReporter(scheduledReporterFactory: 'csvReporter')
+            if (config.getProperty('grails.dropwizard.metrics.csv-reporter.active', Boolean, false)) {
+                dropwizardCsvReporter(scheduledReporterFactory: 'csvReporter')
+            }
         }
     } }
 }
