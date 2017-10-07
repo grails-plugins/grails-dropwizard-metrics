@@ -20,9 +20,9 @@ include::metrics.ad[]
 
 include::healthchecks.ad[]
 
-== Logging
+== Metrics Reporting
 
-include::logging.ad[]
+include::reporting.ad[]
 
 == API Documentation
 

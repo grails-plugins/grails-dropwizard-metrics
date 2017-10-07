@@ -1,0 +1,169 @@
+The plugin provides support for automatically reporting metrics at a scheduled interval using one or more built-in
+Dropwizard ScheduledReporters: `Slf4jReporter`, `ConsoleReporter`, or `CsvReporter`.
+
+A separate plug-in, `dropwizard-metrics-graphite` is available for doing scheduled reporting using
+the `GraphiteReporter`. It can also serve as an example of one approach for adding your own reporter.
+
+The reporters are enabled and configured under the confuration key `grails.dropwizard.metrics`.
+
+To enable scheduled reporting of metrics, first assign a value to the config property named
+`reporterFrequency` to indicate how often the reporting should occur. The value represents the
+reporting interval *in seconds*.
+
+```
+grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 30 # report every 30 seconds
+```
+If `reporterFrequency` is missing or has a value of zero, metric reporting will not occur.
+
+For reference as we discuss the various reporters, a SimpleService was created with a `@Metered`
+method:
+```
+package demo.dropwizard
+
+import grails.gorm.transactions.Transactional
+import grails.plugin.dropwizard.metrics.meters.Metered
+
+@Transactional(readOnly = true)
+class SimpleService {
+
+    @Metered('sayHello meter')
+    String sayHello(String name) {
+        name ? "Hello ${name}!" : 'Hello Stranger!'
+    }
+}
+```
+
+=== Slf4jReporter
+
+The Slf4jReporter reports metrics via a Slf4j logger named `grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin` at
+the `INFO` level. You may want to configure the level for that logger in `grails-app/conf/logback.groovy`
+as shown below.
+
+```
+logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
+        INFO, ['STDOUT'], false
+```
+
+For backward compatibility, this reporter is active by default. However, adding `slf4j-reporter.active` configuration
+can explicitly enable or disable the Slf4j reporter:
+
+```
+grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            slf4j-reporter.active: false
+```
+When active, the Slf4jReporter metric reporting to the configured logger looks like this:
+```
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.metrics, value=2.0
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.sayHello.Fred, value=3.0
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.metrics, count=2
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.sayHello.Fred, count=10
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=METER, name=sayHello meter, count=10, mean_rate=0.010176484138111742, m1=1.7528496438887441E-7, m5=0.077548415663444, m15=0.6769308502134816, rate_unit=events/second
+```
+
+=== ConsoleReporter
+
+The ConsoleReporter reports metrics directly to the console, making it a convenient reporter for
+use in development and environments where console output is required instead of logging.
+
+To configure it, simply declare `grails.dropwizard.console-reporter.active: true` in configuration.
+Below we see that the slf4j-reporter is configured as inactive and the console-reporter is active.
+
+```
+grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            slf4j-reporter.active: false
+            console-reporter.active: true
+```
+However, both could be enabled as `active`. Recall, the slf4j-reporter is active by default for
+backward compatibility, so you must explicitly configure it as inactive if that's what you want.
+
+Here's what the console logging output looks like:
+```
+10/7/17 11:14:29 AM ============================================================
+
+-- Gauges ----------------------------------------------------------------------
+gauge.response.sayHello.Fred
+             value = 3.0
+
+-- Counters --------------------------------------------------------------------
+counter.status.200.sayHello.Fred
+             count = 14
+
+-- Meters ----------------------------------------------------------------------
+sayHello meter
+             count = 14
+         mean rate = 3.53 events/second
+     1-minute rate = 0.00 events/second
+     5-minute rate = 0.00 events/second
+    15-minute rate = 0.00 events/second
+```
+
+=== CsvReporter
+
+The CsvReporter is used to report metrics to a CSV (comma-separated values) file.
+
+To configure it, declare `grails.dropwizard.csv-reporter.active: true` in configuration and specify
+the output directory of the CSV file. Of course, the directory specified must have permissions set
+to allow the application to write to it. If not specified, the `csv-reporter.output-dir` will
+default to the directory from which the app is running; i.e. `./`
+
+Below we see that csv-reporter is configured as active. Since we didn't explicitly declare the
+`slf4j-reporter.active: false`, the metrics would also be logged as well as written to the CSV
+file.
+
+```
+grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            csv-reporter:
+                active: true
+                output-dir: /tmp
+```
+Multiple files are output from the CsvReporter, one for each meter, guage and counter that had
+data reported. For instance, when the `sayHello` method was invoked with the name *Fred*, a `sayHello meter.csv` file
+was written into the `/tmp` directory with the following contents:
+```
+t,count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit
+1507412611,7,4.546009,0.000000,0.000000,0.000000,events/second
+1507412616,7,1.070702,1.400000,1.400000,1.400000,events/second
+1507412621,7,0.606700,1.288062,1.376860,1.392244,events/second
+1507412626,7,0.423267,1.185074,1.354103,1.384531,events/second
+1507412631,7,0.325009,1.090321,1.331721,1.376860,events/second
+1507412636,7,0.263756,1.003144,1.309710,1.369232,events/second
+1507412641,7,0.221956,0.922937,1.288062,1.361646,events/second
+```
+Likewise, a `/tmp/gauge.response.sayHello.Fred.csv` file was written:
+```
+t,value
+1507412611,4.0
+1507412616,4.0
+1507412621,4.0
+1507412626,4.0
+1507412631,4.0
+1507412636,4.0
+1507412641,4.0
+```
+as well as a `/tmp/counter.status.200.sayHello.Fred.csv` file:
+```
+t,count
+1507412611,7
+1507412616,7
+1507412621,7
+1507412626,7
+1507412631,7
+1507412636,7
+1507412641,7
+```
+
+=== For more information
+For details on Dropwizard metrics and these reporters see
+http://metrics.dropwizard.io/3.1.0/manual/core/
