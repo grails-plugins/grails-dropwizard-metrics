@@ -68,9 +68,5 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
         if(config.getProperty('grails.dropwizard.metrics.csv-reporter.active', Boolean, false)) {
             dropwizardCsvReporter(scheduledReporterFactory: 'csvReporter')
         }
-
-        if(config.getProperty('grails.dropwizard.metrics.graphite-reporter.active', Boolean, false)) {
-            dropwizardGraphiteReporter(scheduledReporterFactory: 'graphiteReporter')
-        }
     } }
 }
