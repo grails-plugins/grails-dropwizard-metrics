@@ -27,6 +27,10 @@ class ScheduledReporterFactory {
     @Value('${grails.dropwizard.metrics.csv-reporter.output-dir:./}')
     String csvOutputDir
 
+    /**
+     * Instantiates a ConsoleReporter to be registered as a Spring bean named dropwizardConsoleReporter
+     * @return A ConsoleReporter
+     */
     ConsoleReporter consoleReporter() {
         ConsoleReporter consoleReporter = ConsoleReporter.forRegistry(metricRegistry)
                                                          .convertRatesTo(TimeUnit.SECONDS)
@@ -39,6 +43,10 @@ class ScheduledReporterFactory {
         consoleReporter
     }
 
+    /**
+     * Instantiates a CsvReporter to be registered as a Spring bean named dropwizardCsvReporter
+     * @return A CsvReporter
+     */
     CsvReporter csvReporter() {
         File outputDir = new File(csvOutputDir)
         if(outputDir.exists()) {
@@ -57,6 +65,10 @@ class ScheduledReporterFactory {
         }
     }
 
+    /**
+     * Instantiates a Slf4jReporter to be registered as a Spring bean named dropwizardSlf4jReporter
+     * @return A Slf4jReporter
+     */
     Slf4jReporter slf4jReporter() {
         Slf4jReporter slf4jReporter = Slf4jReporter.forRegistry(metricRegistry)
             .convertRatesTo(TimeUnit.SECONDS)
