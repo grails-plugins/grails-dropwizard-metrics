@@ -48,7 +48,7 @@ logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
 ```
 
 For backward compatibility, this reporter is active by default. However, adding `slf4j-reporter.active` configuration
-can explicitly enable or disable the Slf4j reporter:
+will explicitly enable or disable the Slf4j reporter:
 
 ```
 grails:
@@ -71,7 +71,7 @@ When active, the Slf4jReporter metric reporting to the configured logger looks l
 The ConsoleReporter reports metrics directly to the console, making it a convenient reporter for
 use in development and environments where console output is required instead of logging.
 
-To configure it, simply declare `grails.dropwizard.console-reporter.active: true` in configuration.
+To configure it, simply declare `grails.dropwizard.metrics.console-reporter.active: true` in configuration.
 Below we see that the slf4j-reporter is configured as inactive and the console-reporter is active.
 
 ```
@@ -110,7 +110,7 @@ sayHello meter
 
 The CsvReporter is used to report metrics to a CSV (comma-separated values) file.
 
-To configure it, declare `grails.dropwizard.csv-reporter.active: true` in configuration and specify
+To configure it, declare `grails.dropwizard.metrics.csv-reporter.active: true` in configuration and specify
 the output directory of the CSV file. Of course, the directory specified must have permissions set
 to allow the application to write to it. If not specified, the `csv-reporter.output-dir` will
 default to the directory from which the app is running; i.e. `./`
