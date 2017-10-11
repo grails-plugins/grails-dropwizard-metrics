@@ -4,7 +4,7 @@ cache:
   - $HOME/.gradle
 language: groovy
 jdk:
-- openjdk7
+- openjdk8     # openJdk7 issues with Gradle and Travis - https://github.com/gradle/gradle/issues/2421
 install: true
 script: ./travis-build.sh
 env:
