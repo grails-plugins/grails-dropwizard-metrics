@@ -5,3 +5,4 @@ grails.plugin.dropwizard.metrics.meters
 grails.plugin.dropwizard.metrics.meters.ast
 grails.plugin.dropwizard.metrics.timers
 grails.plugin.dropwizard.metrics.timers.ast
+grails.plugin.dropwizard.reporters

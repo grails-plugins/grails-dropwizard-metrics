@@ -5,8 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<meta name="author" content="Jeff Scott Brown">
-<title>Grails Dropwizard Metrics 1.0.0.M3</title>
+<title>Slf4jReporter</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -418,472 +417,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<style>
-/* Stylesheet for CodeRay to match GitHub theme | MIT License | http://foundation.zurb.com */
-/*pre.CodeRay {background-color:#f7f7f8;}*/
-.CodeRay .line-numbers{border-right:1px solid #d8d8d8;padding:0 0.5em 0 .25em}
-.CodeRay span.line-numbers{display:inline-block;margin-right:.5em;color:rgba(0,0,0,.3)}
-.CodeRay .line-numbers strong{color:rgba(0,0,0,.4)}
-table.CodeRay{border-collapse:separate;border-spacing:0;margin-bottom:0;border:0;background:none}
-table.CodeRay td{vertical-align: top;line-height:1.45}
-table.CodeRay td.line-numbers{text-align:right}
-table.CodeRay td.line-numbers>pre{padding:0;color:rgba(0,0,0,.3)}
-table.CodeRay td.code{padding:0 0 0 .5em}
-table.CodeRay td.code>pre{padding:0}
-.CodeRay .debug{color:#fff !important;background:#000080 !important}
-.CodeRay .annotation{color:#007}
-.CodeRay .attribute-name{color:#000080}
-.CodeRay .attribute-value{color:#700}
-.CodeRay .binary{color:#509}
-.CodeRay .comment{color:#998;font-style:italic}
-.CodeRay .char{color:#04d}
-.CodeRay .char .content{color:#04d}
-.CodeRay .char .delimiter{color:#039}
-.CodeRay .class{color:#458;font-weight:bold}
-.CodeRay .complex{color:#a08}
-.CodeRay .constant,.CodeRay .predefined-constant{color:#008080}
-.CodeRay .color{color:#099}
-.CodeRay .class-variable{color:#369}
-.CodeRay .decorator{color:#b0b}
-.CodeRay .definition{color:#099}
-.CodeRay .delimiter{color:#000}
-.CodeRay .doc{color:#970}
-.CodeRay .doctype{color:#34b}
-.CodeRay .doc-string{color:#d42}
-.CodeRay .escape{color:#666}
-.CodeRay .entity{color:#800}
-.CodeRay .error{color:#808}
-.CodeRay .exception{color:inherit}
-.CodeRay .filename{color:#099}
-.CodeRay .function{color:#900;font-weight:bold}
-.CodeRay .global-variable{color:#008080}
-.CodeRay .hex{color:#058}
-.CodeRay .integer,.CodeRay .float{color:#099}
-.CodeRay .include{color:#555}
-.CodeRay .inline{color:#000}
-.CodeRay .inline .inline{background:#ccc}
-.CodeRay .inline .inline .inline{background:#bbb}
-.CodeRay .inline .inline-delimiter{color:#d14}
-.CodeRay .inline-delimiter{color:#d14}
-.CodeRay .important{color:#555;font-weight:bold}
-.CodeRay .interpreted{color:#b2b}
-.CodeRay .instance-variable{color:#008080}
-.CodeRay .label{color:#970}
-.CodeRay .local-variable{color:#963}
-.CodeRay .octal{color:#40e}
-.CodeRay .predefined{color:#369}
-.CodeRay .preprocessor{color:#579}
-.CodeRay .pseudo-class{color:#555}
-.CodeRay .directive{font-weight:bold}
-.CodeRay .type{font-weight:bold}
-.CodeRay .predefined-type{color:inherit}
-.CodeRay .reserved,.CodeRay .keyword {color:#000;font-weight:bold}
-.CodeRay .key{color:#808}
-.CodeRay .key .delimiter{color:#606}
-.CodeRay .key .char{color:#80f}
-.CodeRay .value{color:#088}
-.CodeRay .regexp .delimiter{color:#808}
-.CodeRay .regexp .content{color:#808}
-.CodeRay .regexp .modifier{color:#808}
-.CodeRay .regexp .char{color:#d14}
-.CodeRay .regexp .function{color:#404;font-weight:bold}
-.CodeRay .string{color:#d20}
-.CodeRay .string .string .string{background:#ffd0d0}
-.CodeRay .string .content{color:#d14}
-.CodeRay .string .char{color:#d14}
-.CodeRay .string .delimiter{color:#d14}
-.CodeRay .shell{color:#d14}
-.CodeRay .shell .delimiter{color:#d14}
-.CodeRay .symbol{color:#990073}
-.CodeRay .symbol .content{color:#a60}
-.CodeRay .symbol .delimiter{color:#630}
-.CodeRay .tag{color:#008080}
-.CodeRay .tag-special{color:#d70}
-.CodeRay .variable{color:#036}
-.CodeRay .insert{background:#afa}
-.CodeRay .delete{background:#faa}
-.CodeRay .change{color:#aaf;background:#007}
-.CodeRay .head{color:#f8f;background:#505}
-.CodeRay .insert .insert{color:#080}
-.CodeRay .delete .delete{color:#800}
-.CodeRay .change .change{color:#66f}
-.CodeRay .head .head{color:#f4f}
-</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Grails Dropwizard Metrics 1.0.0.M3</h1>
-<div class="details">
-<span id="author" class="author">Jeff Scott Brown</span><br>
-<span id="email" class="email"><a href="mailto:brownj@ociweb.com">brownj@ociweb.com</a></span><br>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_introduction">1. Introduction</a></li>
-<li><a href="#_installation">2. Installation</a></li>
-<li><a href="#_metrics">3. Metrics</a>
 <ul class="sectlevel2">
-<li><a href="#_publicmetric_beans">3.1. PublicMetric Beans</a></li>
-<li><a href="#_marking_meters">3.2. Marking Meters</a></li>
-<li><a href="#_timers">3.3. Timers</a></li>
-<li><a href="#_unit_testing">3.4. Unit Testing</a></li>
-<li><a href="#_exposing_metrics_data">3.5. Exposing Metrics Data</a></li>
-</ul>
-</li>
-<li><a href="#_health_checks">4. Health Checks</a>
-<ul class="sectlevel2">
-<li><a href="#_healthcheck_beans">4.1. HealthCheck Beans</a></li>
-<li><a href="#_exposing_health_check_data">4.2. Exposing Health Check Data</a></li>
-</ul>
-</li>
-<li><a href="#_metrics_reporting">5. Metrics Reporting</a>
-<ul class="sectlevel2">
-<li><a href="#_slf4jreporter">5.1. Slf4jReporter</a></li>
-<li><a href="#_consolereporter">5.2. ConsoleReporter</a></li>
-<li><a href="#_csvreporter">5.3. CsvReporter</a></li>
-<li><a href="#_for_more_information">5.4. For more information</a></li>
-</ul>
-</li>
-<li><a href="#_api_documentation">6. API Documentation</a></li>
+<li><a href="#_slf4jreporter">Slf4jReporter</a></li>
+<li><a href="#_consolereporter">ConsoleReporter</a></li>
+<li><a href="#_csvreporter">CsvReporter</a></li>
+<li><a href="#_for_more_information">For more information</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_introduction">1. Introduction</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Dropwizard Metrics plugin provides support for monitoring health checks and metrics
-monitoring for Grails 3 applications.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_installation">2. Installation</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To add the Dropwizard Metrics plugin to an application add the following dependency to the dependencies block of your build.gradle:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">compile "org.grails.plugins:dropwizard-metrics:1.0.0.M3"</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_metrics">3. Metrics</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_publicmetric_beans">3.1. PublicMetric Beans</h3>
-<div class="paragraph">
-<p>The plugin will discover all of the <code>org.springframework.boot.actuate.endpoint.PublicMetrics</code>
-instances that are found in the Spring application context and active them.  An application may provide
-any number of <code>PublicMetrics</code> beans.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_marking_meters">3.2. Marking Meters</h3>
-<div class="quoteblock">
-<blockquote>
-A meter measures the rate of events over time (e.g., “requests per second”). In addition to the mean rate, meters also
-track 1-, 5-, and 15-minute moving averages.
-</blockquote>
-<div class="attribution">
-&#8212; The Dropwizard Metrics Documentation
-</div>
-</div>
-<div class="paragraph">
-<p>The <a href="api/grails/plugin/dropwizard/metrics/meters/Meterable.html">Meterable</a> trait provides a <code>markMeter(String)</code> method which makes it easy
-to access and increment a <code>Meter</code>.  Any class may implement the trait and take advantage of this method.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">SomeClass</span> <span class="directive">implements</span> Meterable {
-
-    <span class="keyword">def</span> <span class="function">someAction</span>() {
-        markMeter <span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>
-
-        <span class="comment">// ...</span>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The plugin provides the <a href="api/grails/plugin/dropwizard/metrics/meters/Metered.html">Metered</a> annotation which may be applied to any method.
-If a method is marked with <code>@Metered</code>, every time the method is invoked, the meter with the specified name will
-automatically be incremented.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">SomeOtherClass</span> {
-
-    <span class="annotation">@Metered</span>(<span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>)
-    <span class="type">void</span> someAction() {
-        <span class="comment">// ...</span>
-    }
-    <span class="annotation">@Metered</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">some other meter</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">true</span>)
-    <span class="type">void</span> someOtherAction() {
-        <span class="comment">// ...</span>
-    }
-    <span class="annotation">@Metered</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">yet another meter</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">false</span>)
-    <span class="type">void</span> yetAnotherAction() {
-        <span class="comment">// ...</span>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>@Metered</code> annotation supports an optional <code>useClassPrefix</code> attribute which when set to <code>true</code> will cause the name
-of the associated meter to be prefixed with the fully qualified name of the class which defines the annotated method.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_timers">3.3. Timers</h3>
-<div class="quoteblock">
-<blockquote>
-A timer is basically a histogram of the duration of a type of event and a meter of the rate of its occurrence.
-</blockquote>
-<div class="attribution">
-&#8212; The Dropwizard Metrics Documentation
-</div>
-</div>
-<div class="paragraph">
-<p>The plugin provides the <a href="api/grails/plugin/dropwizard/metrics/timers/Timed.html">Timed</a> annotation which may be applied to any method.
-If a method is marked with <code>@Timed</code>, every time the method is invoked, the timer with the specified name will
-automatically be started.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">SomeTimedClass</span> {
-
-    <span class="annotation">@Timed</span>(<span class="string"><span class="delimiter">'</span><span class="content">some timer</span><span class="delimiter">'</span></span>)
-    <span class="type">void</span> someAction() {
-        <span class="comment">// ...</span>
-    }
-
-    <span class="annotation">@Timed</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">some other timer</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">true</span>)
-    <span class="type">void</span> someOtherAction() {
-        <span class="comment">// ...</span>
-    }
-
-    <span class="annotation">@Timed</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">yet other timer</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">false</span>)
-    <span class="type">void</span> yetAnotherAction() {
-        <span class="comment">// ...</span>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>@Timed</code> annotation supports an optional <code>useClassPrefix</code> attribute which when set to <code>true</code> will cause the name
-of the associated timer to be prefixed with the fully qualified name of the class which defines the annotated method.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_unit_testing">3.4. Unit Testing</h3>
-<div class="paragraph">
-<p>When unit testing code which uses any of the plugin&#8217;s code generation techniques (<code>@Timed</code>, <code>@Metered</code>, etc&#8230;&#8203;) a bean named <code>metricsRegistry</code> will
-need to be registed in the Spring application context.  Below are examples of how to do that.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">com.codahale.metrics.MetricRegistry</span>
-<span class="keyword">import</span> <span class="include">grails.test.mixin.TestMixin</span>
-<span class="keyword">import</span> <span class="include">grails.test.mixin.support.GrailsUnitTestMixin</span>
-<span class="keyword">import</span> <span class="include">spock.lang.Specification</span>
-
-<span class="annotation">@TestMixin</span>(GrailsUnitTestMixin)
-<span class="type">class</span> <span class="class">MeterableSpec</span> <span class="directive">extends</span> Specification {
-
-    <span class="directive">static</span> doWithSpring = {
-        metricRegistry MetricRegistry
-        someBean SomeClass
-    }
-
-    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test markMeter method</span><span class="delimiter">'</span></span>() {
-        <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.metricRegistry
-        <span class="keyword">def</span> obj = applicationContext.someBean
-
-        <span class="key">when</span>:
-        obj.someAction()
-        obj.someAction()
-        obj.someAction()
-
-        <span class="key">then</span>:
-        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
-    }
-}
-
-<span class="type">class</span> <span class="class">SomeClass</span> <span class="directive">implements</span> Meterable {
-
-    <span class="keyword">def</span> <span class="function">someAction</span>() {
-        markMeter <span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>
-
-        <span class="comment">// ...</span>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">com.codahale.metrics.MetricRegistry</span>
-<span class="keyword">import</span> <span class="include">grails.test.mixin.TestMixin</span>
-<span class="keyword">import</span> <span class="include">grails.test.mixin.support.GrailsUnitTestMixin</span>
-<span class="keyword">import</span> <span class="include">spock.lang.Specification</span>
-
-<span class="annotation">@TestMixin</span>(GrailsUnitTestMixin)
-<span class="type">class</span> <span class="class">MeteredAnnotationSpec</span> <span class="directive">extends</span> Specification {
-
-    <span class="directive">static</span> doWithSpring = {
-        metricRegistry MetricRegistry
-        someMeteredBean SomeOtherClass
-    }
-
-    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation</span><span class="delimiter">'</span></span>() {
-        <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.metricRegistry
-        <span class="keyword">def</span> obj = applicationContext.someMeteredBean
-
-        <span class="key">when</span>:
-        obj.someAction()
-        obj.someAction()
-        obj.someAction()
-
-        <span class="key">then</span>:
-        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
-    }
-
-    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation with useClassPrefix set to true</span><span class="delimiter">'</span></span>() {
-        <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.metricRegistry
-        <span class="keyword">def</span> obj = applicationContext.someMeteredBean
-
-        <span class="key">when</span>:
-        obj.someOtherAction()
-        obj.someOtherAction()
-        obj.someOtherAction()
-
-        <span class="key">then</span>:
-        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">grails.plugin.dropwizard.metrics.meters.SomeOtherClass.some other meter</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
-    }
-
-    <span class="type">void</span> <span class="string"><span class="delimiter">'</span><span class="content">test the @Metered annotation with useClassPrefix set to false</span><span class="delimiter">'</span></span>() {
-        <span class="key">setup</span>:
-        <span class="keyword">def</span> registry = applicationContext.metricRegistry
-        <span class="keyword">def</span> obj = applicationContext.someMeteredBean
-
-        <span class="key">when</span>:
-        obj.yetAnotherAction()
-        obj.yetAnotherAction()
-        obj.yetAnotherAction()
-
-        <span class="key">then</span>:
-        registry.meter(<span class="string"><span class="delimiter">'</span><span class="content">yet another meter</span><span class="delimiter">'</span></span>).count == <span class="integer">3</span>
-    }
-}
-
-<span class="type">class</span> <span class="class">SomeOtherClass</span> {
-
-    <span class="annotation">@Metered</span>(<span class="string"><span class="delimiter">'</span><span class="content">some meter</span><span class="delimiter">'</span></span>)
-    <span class="type">void</span> someAction() {
-        <span class="comment">// ...</span>
-    }
-    <span class="annotation">@Metered</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">some other meter</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">true</span>)
-    <span class="type">void</span> someOtherAction() {
-        <span class="comment">// ...</span>
-    }
-    <span class="annotation">@Metered</span>(value=<span class="string"><span class="delimiter">'</span><span class="content">yet another meter</span><span class="delimiter">'</span></span>, useClassPrefix = <span class="predefined-constant">false</span>)
-    <span class="type">void</span> yetAnotherAction() {
-        <span class="comment">// ...</span>
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_exposing_metrics_data">3.5. Exposing Metrics Data</h3>
-<div class="paragraph">
-<p>The plugin supports exposing access to metrics data through a URI in the web application.  By default metrics are
-available at <code>/metrics</code>.  A request to <code>/metrics</code> will be responded to with JSON provided by all
- of the <code>MetricRegistry</code> instances that are active in the application as shown below.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>{"version":"3.0.0","gauges":{"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-MarkSweep.count":{"value":0},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-MarkSweep.time":{"value":0},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-Scavenge.count":{"value":9},"grails.dropwizard.dropwizardGarbageCollectorMetricSet.PS-Scavenge.time":{"value":468},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.committed":{"value":738197504},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.init":{"value":268435456},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.max":{"value":3817865216},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.usage":{"value":0.14876779767387158},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.heap.used":{"value":567975400},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.committed":{"value":64880640},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.init":{"value":24576000},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.max":{"value":136314880},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.usage":{"value":0.47363680326021634},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.non-heap.used":{"value":64563744},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.committed":{"value":6160384},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.init":{"value":2555904},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.max":{"value":50331648},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.usage":{"value":0.11999003092447917},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.Code-Cache.used":{"value":6039296},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.committed":{"value":525336576},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.init":{"value":67633152},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.max":{"value":1354760192},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.usage":{"value":0.3691370819375242},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Eden-Space.used":{"value":500092224},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.committed":{"value":178782208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.init":{"value":178782208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.max":{"value":2863136768},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.usage":{"value":0.011815351742218974},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Old-Gen.used":{"value":33828968},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.committed":{"value":58720256},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.init":{"value":22020096},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.max":{"value":85983232},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.usage":{"value":0.6806495480421113},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Perm-Gen.used":{"value":58524448},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.committed":{"value":34078720},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.init":{"value":11010048},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.max":{"value":34078720},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.usage":{"value":0.9992807241586539},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.pools.PS-Survivor-Space.used":{"value":34054208},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.committed":{"value":803078144},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.init":{"value":293011456},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.max":{"value":3954180096},"grails.dropwizard.dropwizardMemoryUsageGaugeSet.total.used":{"value":632539312},"grails.dropwizard.dropwizardThreadStatesGaugeSet.blocked.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.count":{"value":23},"grails.dropwizard.dropwizardThreadStatesGaugeSet.daemon.count":{"value":20},"grails.dropwizard.dropwizardThreadStatesGaugeSet.deadlock.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.deadlocks":{"value":[]},"grails.dropwizard.dropwizardThreadStatesGaugeSet.new.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.runnable.count":{"value":9},"grails.dropwizard.dropwizardThreadStatesGaugeSet.terminated.count":{"value":0},"grails.dropwizard.dropwizardThreadStatesGaugeSet.timed_waiting.count":{"value":9},"grails.dropwizard.dropwizardThreadStatesGaugeSet.waiting.count":{"value":5}},"counters":{},"histograms":{},"meters":{},"timers":{}}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-TBD - notes on configuring the endpoint.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Metrics may also be exposed as JMX MBeans.  To enable JMX support assign the value <code>true</code> to the
-<code>grails.dropwizard.jmx.enabled</code> config setting.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>---
-grails:
-    dropwizard:
-        jmx:
-            enabled: true</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_health_checks">4. Health Checks</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_healthcheck_beans">4.1. HealthCheck Beans</h3>
-<div class="paragraph">
-<p>The plugin will discover all of the <code>org.springframework.boot.actuate.health.HealthIndicator</code>
-instances that are found in the Spring application context and active them.  An application may provide
-any number of <code>HealthCheck</code> beans.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_exposing_health_check_data">4.2. Exposing Health Check Data</h3>
-<div class="paragraph">
-<p>The plugin supports exposing access to health check data through a URI in the web application.  To enable
-exposing the data assign a value to the <code>grails.dropwizard.health.uri</code> property to indicate where the
-data should be made available.  A request to <code>/health</code> will be responded to with JSON provided by all
- of the <code>HealthCheck</code> instances that are active in the application as shown below.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>{"dropwizardThreadDeadlockHealthCheck":{"healthy":true}}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-TBD - notes on configuring the endpoint.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_metrics_reporting">5. Metrics Reporting</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p>The plugin provides support for automatically reporting metrics at a scheduled interval using one or more built-in
 Dropwizard ScheduledReporters: <code>Slf4jReporter</code>, <code>ConsoleReporter</code>, or <code>CsvReporter</code>.</p>
@@ -902,7 +449,7 @@ reporting interval <strong>in seconds</strong>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grails:
+<pre class="highlight"><code>grails:
     dropwizard:
         metrics:
             reporterFrequency: 30 # report every 30 seconds</code></pre>
@@ -917,7 +464,7 @@ method:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>package demo.dropwizard
+<pre class="highlight"><code>package demo.dropwizard
 
 import grails.gorm.transactions.Transactional
 import grails.plugin.dropwizard.metrics.meters.Metered
@@ -933,7 +480,7 @@ class SimpleService {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_slf4jreporter">5.1. Slf4jReporter</h3>
+<h3 id="_slf4jreporter">Slf4jReporter</h3>
 <div class="paragraph">
 <p>The Slf4jReporter reports metrics via a Slf4j logger named <code>grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin</code> at
 the <code>INFO</code> level. You may want to configure the level for that logger in <code>grails-app/conf/logback.groovy</code>
@@ -941,7 +488,7 @@ as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
+<pre class="highlight"><code>logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
         INFO, ['STDOUT'], false</code></pre>
 </div>
 </div>
@@ -951,7 +498,7 @@ will explicitly enable or disable the Slf4j reporter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grails:
+<pre class="highlight"><code>grails:
     dropwizard:
         metrics:
             reporterFrequency: 10 # report every 10 seconds
@@ -963,7 +510,7 @@ will explicitly enable or disable the Slf4j reporter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.metrics, value=2.0
+<pre class="highlight"><code>2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.metrics, value=2.0
 2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.sayHello.Fred, value=3.0
 2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.metrics, count=2
 2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.sayHello.Fred, count=10
@@ -972,7 +519,7 @@ will explicitly enable or disable the Slf4j reporter:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_consolereporter">5.2. ConsoleReporter</h3>
+<h3 id="_consolereporter">ConsoleReporter</h3>
 <div class="paragraph">
 <p>The ConsoleReporter reports metrics directly to the console, making it a convenient reporter for
 use in development and environments where console output is required instead of logging.</p>
@@ -983,7 +530,7 @@ Below we see that the slf4j-reporter is configured as inactive and the console-r
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grails:
+<pre class="highlight"><code>grails:
     dropwizard:
         metrics:
             reporterFrequency: 10 # report every 10 seconds
@@ -1000,7 +547,7 @@ backward compatibility, so you must explicitly configure it as inactive if that&
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>10/7/17 11:14:29 AM ============================================================
+<pre class="highlight"><code>10/7/17 11:14:29 AM ============================================================
 
 -- Gauges ----------------------------------------------------------------------
 gauge.response.sayHello.Fred
@@ -1021,7 +568,7 @@ sayHello meter
 </div>
 </div>
 <div class="sect2">
-<h3 id="_csvreporter">5.3. CsvReporter</h3>
+<h3 id="_csvreporter">CsvReporter</h3>
 <div class="paragraph">
 <p>The CsvReporter is used to report metrics to a CSV (comma-separated values) file.</p>
 </div>
@@ -1038,7 +585,7 @@ file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>grails:
+<pre class="highlight"><code>grails:
     dropwizard:
         metrics:
             reporterFrequency: 10 # report every 10 seconds
@@ -1054,7 +601,7 @@ was written into the <code>/tmp</code> directory with the following contents:</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>t,count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit
+<pre class="highlight"><code>t,count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit
 1507412611,7,4.546009,0.000000,0.000000,0.000000,events/second
 1507412616,7,1.070702,1.400000,1.400000,1.400000,events/second
 1507412621,7,0.606700,1.288062,1.376860,1.392244,events/second
@@ -1069,7 +616,7 @@ was written into the <code>/tmp</code> directory with the following contents:</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>t,value
+<pre class="highlight"><code>t,value
 1507412611,4.0
 1507412616,4.0
 1507412621,4.0
@@ -1084,7 +631,7 @@ was written into the <code>/tmp</code> directory with the following contents:</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>t,count
+<pre class="highlight"><code>t,count
 1507412611,7
 1507412616,7
 1507412621,7
@@ -1096,20 +643,10 @@ was written into the <code>/tmp</code> directory with the following contents:</p
 </div>
 </div>
 <div class="sect2">
-<h3 id="_for_more_information">5.4. For more information</h3>
+<h3 id="_for_more_information">For more information</h3>
 <div class="paragraph">
 <p>For details on Dropwizard metrics and these reporters see
 <a href="http://metrics.dropwizard.io/3.1.0/manual/core/" class="bare">http://metrics.dropwizard.io/3.1.0/manual/core/</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_api_documentation">6. API Documentation</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>API documentation may be found <a href="api/index.html">here</a>.</p>
-</div>
 </div>
 </div>
 </div>
