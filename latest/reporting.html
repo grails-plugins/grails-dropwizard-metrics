@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Untitled</title>
+<title>Slf4jReporter</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -422,27 +422,68 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-
+<ul class="sectlevel2">
+<li><a href="#_slf4jreporter">Slf4jReporter</a></li>
+<li><a href="#_consolereporter">ConsoleReporter</a></li>
+<li><a href="#_csvreporter">CsvReporter</a></li>
+<li><a href="#_for_more_information">For more information</a></li>
+</ul>
 </div>
 </div>
 <div id="content">
 <div class="paragraph">
-<p>The plugin provides support for automatically logging metrics at a scheduled interval.
-To enable logging assign a value to the <code>grails.dropwizard.metrics.reporterFrequency</code> config
-property to indicate how often the logging should occur.  The value represents the logging
-interval in seconds.</p>
+<p>The plugin provides support for automatically reporting metrics at a scheduled interval using one or more built-in
+Dropwizard ScheduledReporters: <code>Slf4jReporter</code>, <code>ConsoleReporter</code>, or <code>CsvReporter</code>.</p>
+</div>
+<div class="paragraph">
+<p>A separate plug-in, <code>dropwizard-metrics-graphite</code> is available for doing scheduled reporting using
+the <code>GraphiteReporter</code>. It can also serve as an example of one approach for adding your own reporter.</p>
+</div>
+<div class="paragraph">
+<p>The reporters are enabled and configured under the confuration key <code>grails.dropwizard.metrics</code>.</p>
+</div>
+<div class="paragraph">
+<p>To enable scheduled reporting of metrics, first assign a value to the config property named
+<code>reporterFrequency</code> to indicate how often the reporting should occur. The value represents the
+reporting interval <strong>in seconds</strong>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code>grails:
     dropwizard:
         metrics:
-            reporterFrequency: 30 # log every 30 seconds</code></pre>
+            reporterFrequency: 30 # report every 30 seconds</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The logging is being done from a logger named <code>grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin</code> at
-the <code>INFO</code> level.  You may want to configure the level for that logger in <code>grails-app/conf/logback.groovy</code>
+<p>If <code>reporterFrequency</code> is missing or has a value of zero, metric reporting will not occur.</p>
+</div>
+<div class="paragraph">
+<p>For reference as we discuss the various reporters, a SimpleService was created with a <code>@Metered</code>
+method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>package demo.dropwizard
+
+import grails.gorm.transactions.Transactional
+import grails.plugin.dropwizard.metrics.meters.Metered
+
+@Transactional(readOnly = true)
+class SimpleService {
+
+    @Metered('sayHello meter')
+    String sayHello(String name) {
+        name ? "Hello ${name}!" : 'Hello Stranger!'
+    }
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_slf4jreporter">Slf4jReporter</h3>
+<div class="paragraph">
+<p>The Slf4jReporter reports metrics via a Slf4j logger named <code>grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin</code> at
+the <code>INFO</code> level. You may want to configure the level for that logger in <code>grails-app/conf/logback.groovy</code>
 as shown below.</p>
 </div>
 <div class="listingblock">
@@ -451,10 +492,167 @@ as shown below.</p>
         INFO, ['STDOUT'], false</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>For backward compatibility, this reporter is active by default. However, adding <code>slf4j-reporter.active</code> configuration
+will explicitly enable or disable the Slf4j reporter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            slf4j-reporter.active: false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When active, the Slf4jReporter metric reporting to the configured logger looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.metrics, value=2.0
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=GAUGE, name=gauge.response.sayHello.Fred, value=3.0
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.metrics, count=2
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=COUNTER, name=counter.status.200.sayHello.Fred, count=10
+2017-10-07 11:06:30.820  INFO --- [rter-1-thread-1] com.codahale.metrics.Slf4jReporter : type=METER, name=sayHello meter, count=10, mean_rate=0.010176484138111742, m1=1.7528496438887441E-7, m5=0.077548415663444, m15=0.6769308502134816, rate_unit=events/second</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_consolereporter">ConsoleReporter</h3>
+<div class="paragraph">
+<p>The ConsoleReporter reports metrics directly to the console, making it a convenient reporter for
+use in development and environments where console output is required instead of logging.</p>
+</div>
+<div class="paragraph">
+<p>To configure it, simply declare <code>grails.dropwizard.metrics.console-reporter.active: true</code> in configuration.
+Below we see that the slf4j-reporter is configured as inactive and the console-reporter is active.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            slf4j-reporter.active: false
+            console-reporter.active: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, both could be enabled as <code>active</code>. Recall, the slf4j-reporter is active by default for
+backward compatibility, so you must explicitly configure it as inactive if that&#8217;s what you want.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s what the console logging output looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>10/7/17 11:14:29 AM ============================================================
+
+-- Gauges ----------------------------------------------------------------------
+gauge.response.sayHello.Fred
+             value = 3.0
+
+-- Counters --------------------------------------------------------------------
+counter.status.200.sayHello.Fred
+             count = 14
+
+-- Meters ----------------------------------------------------------------------
+sayHello meter
+             count = 14
+         mean rate = 3.53 events/second
+     1-minute rate = 0.00 events/second
+     5-minute rate = 0.00 events/second
+    15-minute rate = 0.00 events/second</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_csvreporter">CsvReporter</h3>
+<div class="paragraph">
+<p>The CsvReporter is used to report metrics to a CSV (comma-separated values) file.</p>
+</div>
+<div class="paragraph">
+<p>To configure it, declare <code>grails.dropwizard.metrics.csv-reporter.active: true</code> in configuration and specify
+the output directory of the CSV file. Of course, the directory specified must have permissions set
+to allow the application to write to it. If not specified, the <code>csv-reporter.output-dir</code> will
+default to the directory from which the app is running; i.e. <code>./</code></p>
+</div>
+<div class="paragraph">
+<p>Below we see that csv-reporter is configured as active. Since we didn&#8217;t explicitly declare the
+<code>slf4j-reporter.active: false</code>, the metrics would also be logged as well as written to the CSV
+file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>grails:
+    dropwizard:
+        metrics:
+            reporterFrequency: 10 # report every 10 seconds
+            csv-reporter:
+                active: true
+                output-dir: /tmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Multiple files are output from the CsvReporter, one for each meter, guage and counter that had
+data reported. For instance, when the <code>sayHello</code> method was invoked with the name <strong>Fred</strong>, a <code>sayHello meter.csv</code> file
+was written into the <code>/tmp</code> directory with the following contents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>t,count,mean_rate,m1_rate,m5_rate,m15_rate,rate_unit
+1507412611,7,4.546009,0.000000,0.000000,0.000000,events/second
+1507412616,7,1.070702,1.400000,1.400000,1.400000,events/second
+1507412621,7,0.606700,1.288062,1.376860,1.392244,events/second
+1507412626,7,0.423267,1.185074,1.354103,1.384531,events/second
+1507412631,7,0.325009,1.090321,1.331721,1.376860,events/second
+1507412636,7,0.263756,1.003144,1.309710,1.369232,events/second
+1507412641,7,0.221956,0.922937,1.288062,1.361646,events/second</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Likewise, a <code>/tmp/gauge.response.sayHello.Fred.csv</code> file was written:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>t,value
+1507412611,4.0
+1507412616,4.0
+1507412621,4.0
+1507412626,4.0
+1507412631,4.0
+1507412636,4.0
+1507412641,4.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>as well as a <code>/tmp/counter.status.200.sayHello.Fred.csv</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>t,count
+1507412611,7
+1507412616,7
+1507412621,7
+1507412626,7
+1507412631,7
+1507412636,7
+1507412641,7</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_for_more_information">For more information</h3>
+<div class="paragraph">
+<p>For details on Dropwizard metrics and these reporters see
+<a href="http://metrics.dropwizard.io/3.1.0/manual/core/" class="bare">http://metrics.dropwizard.io/3.1.0/manual/core/</a></p>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-05-21 22:10:29 UTC
+Last updated 2017-10-11 14:54:59 -10:00
 </div>
 </div>
 </body>
