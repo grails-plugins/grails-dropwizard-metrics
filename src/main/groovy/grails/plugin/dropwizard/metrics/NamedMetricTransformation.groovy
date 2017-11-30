@@ -36,24 +36,24 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
         if(nodes[1] instanceof MethodNode){
             MethodNode method = (MethodNode) nodes[1]
 
-            processMethodAnnotation(annotationNode, method)
+            processMethodAnnotation(annotationNode, method, source)
         }
         else if(nodes[1] instanceof ClassNode){
             ClassNode classNode = (ClassNode) nodes[1]
 
-            classNode.methods.each{ MethodNode method ->
-                processClassAnnotation(annotationNode, method)
+            classNode.methods.findAll{!it.name.contains('$')}.each{ MethodNode method ->
+                processClassAnnotation(annotationNode, method, source)
             }
         }
     }
 
-    private processMethodAnnotation(AnnotationNode annotationNode, MethodNode methodNode){
+    private processMethodAnnotation(AnnotationNode annotationNode, MethodNode methodNode, final SourceUnit source){
         final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode, false)
         implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
         doTransformation(annotationNode, methodNode, source, metricNameExpression)
     }
 
-    private processClassAnnotation(AnnotationNode annotationNode, MethodNode methodNode){
+    private processClassAnnotation(AnnotationNode annotationNode, MethodNode methodNode, final SourceUnit source){
         final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode, true)
         implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
         doTransformation(annotationNode, methodNode, source, metricNameExpression)
@@ -64,7 +64,13 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
     protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode, final Boolean dynamic) {
         final String metricNameFromAnnotation
 
-        if(dynamic) metricNameFromAnnotation = methodNode.getName() + ' meter'
+        if(dynamic) {
+            final String methodName = methodNode.getName()
+
+            final String parameters = methodNode.getParameters().join(', ')
+
+            metricNameFromAnnotation = "${methodName}(${parameters}) meter"
+        }
         else metricNameFromAnnotation = annotationNode.getMember('value').getText()
 
         final Expression metricNameExpression
