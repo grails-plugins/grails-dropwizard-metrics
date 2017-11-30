@@ -20,14 +20,13 @@ import grails.plugins.Plugin
 
 class DropwizardMetricsGrailsPlugin extends Plugin {
 
-    // the version or versions of Grails the plugin is designed for
     def grailsVersion = "3.0.14 > *"
-    // resources that are excluded from plugin packaging
+
     def pluginExcludes = [
         "grails-app/views/error.gsp"
     ]
 
-    def title = "Dropwizard Metrics" // Headline display name of the plugin
+    def title = "Dropwizard Metrics"
     def author = "Jeff Scott Brown"
     def authorEmail = "brownj@objectcomputing.com"
     def description = '''\
@@ -35,19 +34,14 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
 '''
     def profiles = ['web']
 
-    // URL to the plugin's documentation
     def documentation = "http://grails-plugins.github.io/grails-dropwizard-metrics"
 
-    // License: one of 'APACHE', 'GPL2', 'GPL3'
     def license = "APACHE"
 
-    // Details of company behind the plugin (if there is one)
     def organization = [name: "OCI", url: "http://www.objectcomputing.com/"]
 
-    // Location of the plugin's issue tracker.
     def issueManagement = [system: "GitHub Issues", url: "https://github.com/grails-plugins/grails-dropwizard-metrics/issues"]
 
-    // Online location of the plugin's browseable source code.
     def scm = [url: "https://github.com/grails-plugins/grails-dropwizard-metrics"]
 
     @Override
