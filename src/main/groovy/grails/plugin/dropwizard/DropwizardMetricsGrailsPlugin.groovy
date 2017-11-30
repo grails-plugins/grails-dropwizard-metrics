@@ -17,9 +17,7 @@ package grails.plugin.dropwizard
 
 import grails.plugin.dropwizard.reporters.ScheduledReporterFactory
 import grails.plugins.Plugin
-import groovy.util.logging.Slf4j
 
-@Slf4j
 class DropwizardMetricsGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
