@@ -38,13 +38,12 @@ class SimpleService {
 
 === Slf4jReporter
 
-The Slf4jReporter reports metrics via a Slf4j logger named `grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin` at
+The Slf4jReporter reports metrics via a Slf4j logger named `com.codahale.metrics.Slf4jReporter` at
 the `INFO` level. You may want to configure the level for that logger in `grails-app/conf/logback.groovy`
 as shown below.
 
 ```
-logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
-        INFO, ['STDOUT'], false
+logger 'com.codahale.metrics.Slf4jReporter', INFO, ['STDOUT'], false
 ```
 
 For backward compatibility, this reporter is active by default. However, adding `slf4j-reporter.active` configuration
