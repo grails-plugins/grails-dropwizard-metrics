@@ -31,7 +31,7 @@ class DropwizardMetricsGrailsPlugin extends Plugin {
 
     def title = "Dropwizard Metrics" // Headline display name of the plugin
     def author = "Jeff Scott Brown"
-    def authorEmail = "brownj@ociweb.com"
+    def authorEmail = "brownj@objectcomputing.com.com"
     def description = '''\
 Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
 '''
