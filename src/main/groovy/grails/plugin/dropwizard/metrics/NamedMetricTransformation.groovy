@@ -63,15 +63,16 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
 
     protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode, final Boolean dynamic) {
         final String metricNameFromAnnotation
+        final String annotationName = annotationNode.getMember('value').getText()
 
         if(dynamic) {
             final String methodName = methodNode.getName()
 
             final String parameters = methodNode.getParameters().join(', ')
 
-            metricNameFromAnnotation = "${methodName}(${parameters}) meter"
+            metricNameFromAnnotation = "${annotationName} ${methodName}(${parameters}) meter"
         }
-        else metricNameFromAnnotation = annotationNode.getMember('value').getText()
+        else metricNameFromAnnotation = annotationName
 
         final Expression metricNameExpression
 
