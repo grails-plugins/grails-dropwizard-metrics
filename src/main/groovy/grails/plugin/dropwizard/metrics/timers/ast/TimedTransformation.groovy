@@ -20,6 +20,7 @@ import grails.plugin.dropwizard.metrics.NamedMetricTransformation
 import groovy.transform.CompileStatic
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.expr.*
 import org.codehaus.groovy.ast.stmt.BlockStatement
@@ -46,7 +47,7 @@ class TimedTransformation extends NamedMetricTransformation {
 
         final String contextVariableName = '$$_dropwizard_time'
         final Expression declareTimerExpression = new DeclarationExpression(
-                new VariableExpression(contextVariableName, ClassHelper.make(Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
+                new VariableExpression(contextVariableName, (ClassNode) ClassHelper.make(Timer.Context)), Token.newSymbol(Types.EQUALS, 0, 0), timeExpression)
 
         final BlockStatement newCode = new BlockStatement()
         newCode.addStatement(new ExpressionStatement(declareTimerExpression))

@@ -21,7 +21,7 @@ import java.lang.annotation.ElementType
 import java.lang.annotation.Target
 
 @GroovyASTTransformationClass('grails.plugin.dropwizard.metrics.meters.ast.MeteredTransformation')
-@Target(ElementType.METHOD)
+@Target([ElementType.METHOD, ElementType.TYPE])
 @interface Metered {
     String value()
     boolean useClassPrefix() default false
