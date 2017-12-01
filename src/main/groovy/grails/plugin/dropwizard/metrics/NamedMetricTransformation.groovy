@@ -42,7 +42,7 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
             ClassNode classNode = (ClassNode) nodes[1]
 
             classNode.methods.findAll{!it.name.contains('$')}.each{ MethodNode method ->
-                processClassAnnotation(annotationNode, method, source)
+                if(method.isPublic()) processClassAnnotation(annotationNode, method, source)
             }
         }
     }
