@@ -33,17 +33,46 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
     @Override
     void visit(final ASTNode[] nodes, final SourceUnit source) {
         final AnnotationNode annotationNode = (AnnotationNode)nodes[0]
-        final MethodNode methodNode = (MethodNode)nodes[1]
+        if(nodes[1] instanceof MethodNode){
+            MethodNode method = (MethodNode) nodes[1]
 
-        final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode)
+            processMethodAnnotation(annotationNode, method, source)
+        }
+        else if(nodes[1] instanceof ClassNode){
+            ClassNode classNode = (ClassNode) nodes[1]
+
+            classNode.methods.findAll{!it.name.contains('$')}.each{ MethodNode method ->
+                if(method.isPublic()) processClassAnnotation(annotationNode, method, source)
+            }
+        }
+    }
+
+    private processMethodAnnotation(AnnotationNode annotationNode, MethodNode methodNode, final SourceUnit source){
+        final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode, false)
+        implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
+        doTransformation(annotationNode, methodNode, source, metricNameExpression)
+    }
+
+    private processClassAnnotation(AnnotationNode annotationNode, MethodNode methodNode, final SourceUnit source){
+        final Expression metricNameExpression = getMetricNameExpression(annotationNode, methodNode, true)
         implementMetricRegistryAware(compilationUnit, source, methodNode.declaringClass)
         doTransformation(annotationNode, methodNode, source, metricNameExpression)
     }
 
     abstract protected void doTransformation(AnnotationNode annotationNode, MethodNode methodNode, SourceUnit source, Expression metricNameExpression)
 
-    protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode) {
-        final String metricNameFromAnnotation = annotationNode.getMember('value').getText()
+    protected Expression getMetricNameExpression(final AnnotationNode annotationNode, final MethodNode methodNode, final Boolean dynamic) {
+        final String metricNameFromAnnotation
+        final String annotationName = annotationNode.getMember('value').getText()
+
+        if(dynamic) {
+            final String methodName = methodNode.getName()
+
+            final String parameters = methodNode.getParameters().join(', ')
+
+            metricNameFromAnnotation = "${annotationName} ${methodName}(${parameters}) meter"
+        }
+        else metricNameFromAnnotation = annotationName
 
         final Expression metricNameExpression
 
@@ -52,7 +81,7 @@ abstract class NamedMetricTransformation implements ASTTransformation, Compilati
             final ArgumentListExpression nameMethodArguments = new ArgumentListExpression()
             nameMethodArguments.addExpression(new ClassExpression(methodNode.declaringClass))
             nameMethodArguments.addExpression(new ConstantExpression(metricNameFromAnnotation))
-            metricNameExpression = new StaticMethodCallExpression(ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
+            metricNameExpression = new StaticMethodCallExpression((ClassNode) ClassHelper.make(MetricRegistry), 'name', nameMethodArguments)
         } else {
             metricNameExpression = new ConstantExpression(metricNameFromAnnotation)
         }
