@@ -15,6 +15,7 @@
  */
 package grails.plugin.dropwizard
 
+import com.codahale.metrics.MetricRegistry
 import grails.plugin.dropwizard.reporters.ScheduledReporterFactory
 import grails.plugins.Plugin
 
@@ -46,6 +47,7 @@ Grails 3 plugin providing convenient access to the Dropwizard Metrics library.
 
     @Override
     Closure doWithSpring() { { ->
+        metricRegistry(MetricRegistry)
 
         if(config.getProperty('grails.dropwizard.metrics.reporterFrequency', Integer, 0)) {
             scheduledReporterFactory(ScheduledReporterFactory)
