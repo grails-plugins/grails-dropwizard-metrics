@@ -56,6 +56,9 @@ asciidoctor {
             'version'       : project.version
 }
 
+// enable if you wish to package this plugin as a standalone application
+bootJar.enabled = false
+
 grailsPublish {
     userOrg = 'grails'
     githubSlug = 'grails-plugins/grails-dropwizard-metrics'
