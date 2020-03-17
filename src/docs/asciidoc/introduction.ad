@@ -1,13 +1,7 @@
 The Dropwizard Metrics plugin provides support for monitoring health checks and metrics
-monitoring for Grails 3 and 4 applications.  Version 1.x of this plugin should be used
-with Grails 3.x applications and version 2.x with Grails 4.x applications.
+monitoring for Grails 3 applications.
 
-Dropwizard dependencies used for the 1.x version of this plugin:
+Dropwizard dependencies used in this plugin:
 ```
 io.dropwizard.metrics:metrics-core:3.1.2
-```
-
-Dropwizard dependencies used for the 2.x version of this plugin:
-```
-io.dropwizard.metrics:metrics-core:4.1.5
 ```
