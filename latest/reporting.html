@@ -482,14 +482,13 @@ class SimpleService {
 <div class="sect2">
 <h3 id="_slf4jreporter">Slf4jReporter</h3>
 <div class="paragraph">
-<p>The Slf4jReporter reports metrics via a Slf4j logger named <code>grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin</code> at
+<p>The Slf4jReporter reports metrics via a Slf4j logger named <code>com.codahale.metrics.Slf4jReporter</code> at
 the <code>INFO</code> level. You may want to configure the level for that logger in <code>grails-app/conf/logback.groovy</code>
 as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>logger 'grails.plugin.dropwizard.DropwizardMetricsGrailsPlugin',
-        INFO, ['STDOUT'], false</code></pre>
+<pre class="highlight"><code>logger 'com.codahale.metrics.Slf4jReporter', INFO, ['STDOUT'], false</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -652,7 +651,7 @@ was written into the <code>/tmp</code> directory with the following contents:</p
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-10-12 02:08:38 +00:00
+Last updated 2020-03-18 14:59:03 +00:00
 </div>
 </div>
 </body>
