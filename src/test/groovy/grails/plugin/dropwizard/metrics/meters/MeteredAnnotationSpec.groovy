@@ -3,58 +3,58 @@ package grails.plugin.dropwizard.metrics.meters
 // tag::test_class[]
 
 import com.codahale.metrics.MetricRegistry
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
+import org.grails.testing.GrailsUnitTest
 import spock.lang.Specification
 
-@TestMixin(GrailsUnitTestMixin)
-class MeteredAnnotationSpec extends Specification {
+class MeteredAnnotationSpec extends Specification implements GrailsUnitTest {
 
-    static doWithSpring = {
-        metricRegistry MetricRegistry
-        someMeteredBean SomeOtherClass
+    Closure doWithSpring() {
+        { ->
+            metricRegistry MetricRegistry
+            someMeteredBean SomeOtherClass
+        }
     }
 
     void 'test the @Metered annotation'() {
         setup:
-        def registry = applicationContext.metricRegistry
-        def obj = applicationContext.someMeteredBean
+            def registry = applicationContext.metricRegistry
+            def obj = applicationContext.someMeteredBean
 
         when:
-        obj.someAction()
-        obj.someAction()
-        obj.someAction()
+            obj.someAction()
+            obj.someAction()
+            obj.someAction()
 
         then:
-        registry.meter('some meter').count == 3
+            registry.meter('some meter').count == 3
     }
 
     void 'test the @Metered annotation with useClassPrefix set to true'() {
         setup:
-        def registry = applicationContext.metricRegistry
-        def obj = applicationContext.someMeteredBean
+            def registry = applicationContext.metricRegistry
+            def obj = applicationContext.someMeteredBean
 
         when:
-        obj.someOtherAction()
-        obj.someOtherAction()
-        obj.someOtherAction()
+            obj.someOtherAction()
+            obj.someOtherAction()
+            obj.someOtherAction()
 
         then:
-        registry.meter('grails.plugin.dropwizard.metrics.meters.SomeOtherClass.some other meter').count == 3
+            registry.meter('grails.plugin.dropwizard.metrics.meters.SomeOtherClass.some other meter').count == 3
     }
 
     void 'test the @Metered annotation with useClassPrefix set to false'() {
         setup:
-        def registry = applicationContext.metricRegistry
-        def obj = applicationContext.someMeteredBean
+            def registry = applicationContext.metricRegistry
+            def obj = applicationContext.someMeteredBean
 
         when:
-        obj.yetAnotherAction()
-        obj.yetAnotherAction()
-        obj.yetAnotherAction()
+            obj.yetAnotherAction()
+            obj.yetAnotherAction()
+            obj.yetAnotherAction()
 
         then:
-        registry.meter('yet another meter').count == 3
+            registry.meter('yet another meter').count == 3
     }
 }
 
@@ -65,15 +65,18 @@ class SomeOtherClass {
     void someAction() {
         // ...
     }
-    @Metered(value='some other meter', useClassPrefix = true)
+
+    @Metered(value = 'some other meter', useClassPrefix = true)
     void someOtherAction() {
         // ...
     }
-    @Metered(value='yet another meter', useClassPrefix = false)
+
+    @Metered(value = 'yet another meter', useClassPrefix = false)
     void yetAnotherAction() {
         // ...
     }
 }
+
 // end::sample_class[]
 // end::test_class[]
 

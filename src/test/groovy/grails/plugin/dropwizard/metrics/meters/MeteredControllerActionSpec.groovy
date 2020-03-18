@@ -2,26 +2,27 @@ package grails.plugin.dropwizard.metrics.meters
 
 import com.codahale.metrics.MetricRegistry
 import grails.artefact.Artefact
-import grails.test.mixin.TestFor
+import grails.testing.web.controllers.ControllerUnitTest
 import spock.lang.Specification
 
-@TestFor(SomeController)
-class MeteredControllerActionSpec extends Specification {
+class MeteredControllerActionSpec extends Specification implements ControllerUnitTest<SomeController> {
 
-    static doWithSpring = {
-        metricRegistry MetricRegistry
+    Closure doWithSpring() {
+        { ->
+            metricRegistry MetricRegistry
+        }
     }
 
     void 'test the @Metered annotation'() {
         setup:
-        def registry = applicationContext.metricRegistry
+            def registry = applicationContext.metricRegistry
 
         when:
-        controller.someAction()
-        controller.someAction()
+            controller.someAction()
+            controller.someAction()
 
         then:
-        registry.meter('some action meter').count == 2
+            registry.meter('some action meter').count == 2
     }
 }
 

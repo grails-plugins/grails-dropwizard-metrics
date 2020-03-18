@@ -3,16 +3,16 @@ package grails.plugin.dropwizard.metrics.meters
 // tag::test_class[]
 
 import com.codahale.metrics.MetricRegistry
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
+import org.grails.testing.GrailsUnitTest
 import spock.lang.Specification
 
-@TestMixin(GrailsUnitTestMixin)
-class MeterableSpec extends Specification {
+class MeterableSpec extends Specification implements GrailsUnitTest {
 
-    static doWithSpring = {
-        metricRegistry MetricRegistry
-        someBean SomeClass
+    Closure doWithSpring() {
+        { ->
+            metricRegistry MetricRegistry
+            someBean SomeClass
+        }
     }
 
     void 'test markMeter method'() {
